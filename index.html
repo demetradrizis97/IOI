@@ -4,8 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Breaking News Generator</title>
-  <!-- Load html2pdf library for PDF generation -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   
   <style>
     body {
@@ -26,15 +24,8 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     
-    .form-group {
-      margin-bottom: 15px;
-    }
-    
-    label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; font-weight: bold; margin-bottom: 5px; }
     
     input[type="text"], textarea, select {
       width: 100%;
@@ -44,11 +35,7 @@
       box-sizing: border-box;
       font-family: inherit;
     }
-    
-    textarea {
-      resize: vertical;
-      min-height: 80px;
-    }
+    textarea { resize: vertical; min-height: 80px; }
     
     .btn-export {
       background-color: #0056b3;
@@ -61,12 +48,9 @@
       font-weight: bold;
       margin-top: 10px;
     }
-    
-    .btn-export:hover {
-      background-color: #004494;
-    }
+    .btn-export:hover { background-color: #004494; }
 
-    /* Template Wrapper (Target for PDF) */
+    /* Preview Panel Styles */
     .preview-panel {
       background: #e9ecef;
       padding: 20px;
@@ -82,10 +66,7 @@
       min-height: 400px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
-    
-    .template-container.active {
-      display: block;
-    }
+    .template-container.active { display: block; }
 
     /* FLASH Badge */
     .flash-badge {
@@ -101,17 +82,16 @@
       letter-spacing: 2px;
     }
 
-    /* Dynamic Content Sections */
+    /* Content Sections */
     .content-section {
       margin-bottom: 20px;
       background: rgba(255, 255, 255, 0.1);
       padding: 15px;
       border-radius: 4px;
     }
-
     .content-section h3 { margin-top: 0; font-size: 1.1rem; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 5px;}
 
-    /* Template Specific Styles */
+    /* Template Themes */
     #template1 { background-color: #1a1a1a; color: white; border-top: 10px solid #ff0000; }
     #template2 { background-color: #f4f4f4; color: #333; border-left: 10px solid #0056b3; }
     #template2 .content-section { background: white; border: 1px solid #ddd; }
@@ -119,6 +99,43 @@
     #template3 { background-color: #8b0000; color: white; border: 5px solid #ffcc00; }
     
     h1 { margin-top: 0; font-size: 2.5rem; text-transform: uppercase; margin-bottom: 30px;}
+
+    /* =========================================
+       PRINT / PDF EXPORT STYLES 
+       ========================================= */
+    @media print {
+      /* Force background colors to print */
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      
+      body {
+        background-color: white;
+        padding: 0;
+        margin: 0;
+      }
+
+      /* Hide the input panel and preview titles completely */
+      .editor-panel, 
+      .preview-panel h2 {
+        display: none !important;
+      }
+
+      /* Remove formatting from the preview wrapper so the template takes over */
+      .preview-panel {
+        background: transparent;
+        padding: 0;
+      }
+
+      /* Expand the template to fill the PDF page */
+      .template-container {
+        box-shadow: none;
+        border-radius: 0;
+        min-height: 100vh;
+        margin: 0;
+      }
+    }
   </style>
 </head>
 <body>
@@ -151,14 +168,14 @@
       <textarea id="inputMap" placeholder="Enter location details, coordinates, or map link..." oninput="updateContent()"></textarea>
     </div>
 
-    <button class="btn-export" onclick="generatePDF()">Export to PDF</button>
+    <!-- This button now triggers the browser's native print-to-pdf -->
+    <button class="btn-export" onclick="window.print()">Export to PDF</button>
   </div>
 
   <!-- Live Preview Panel -->
   <div class="preview-panel">
     <h2>Live Preview</h2>
     
-    <!-- Template 1 -->
     <div id="template1" class="template-container active">
       <div class="flash-badge">FLASH</div>
       <h1>Breaking News</h1>
@@ -176,7 +193,6 @@
       </div>
     </div>
 
-    <!-- Template 2 -->
     <div id="template2" class="template-container">
       <div class="flash-badge">FLASH</div>
       <h1>Urgent Update</h1>
@@ -194,7 +210,6 @@
       </div>
     </div>
 
-    <!-- Template 3 -->
     <div id="template3" class="template-container">
       <div class="flash-badge">FLASH</div>
       <h1>Critical Alert</h1>
@@ -215,50 +230,22 @@
 
   <!-- Logic -->
   <script>
-    // Switch between templates
     function switchTemplate() {
       const selectedId = document.getElementById('templateSelect').value;
       const templates = document.querySelectorAll('.template-container');
       templates.forEach(template => template.classList.remove('active'));
       document.getElementById(selectedId).classList.add('active');
-      updateContent(); // Ensure current text is applied to the newly visible template
+      updateContent(); 
     }
 
-    // Sync input fields with the active template
     function updateContent() {
       const summaryText = document.getElementById('inputSummary').value || 'Awaiting input...';
       const detailsText = document.getElementById('inputDetails').value || 'Awaiting input...';
       const mapText = document.getElementById('inputMap').value || 'Awaiting input...';
 
-      // Update all templates so data persists when switching
       document.querySelectorAll('.bind-summary').forEach(el => el.innerText = summaryText);
       document.querySelectorAll('.bind-details').forEach(el => el.innerText = detailsText);
       document.querySelectorAll('.bind-map').forEach(el => el.innerText = mapText);
-    }
-
-    // Export active template to PDF
-    function generatePDF() {
-      // Find the currently active template
-      const element = document.querySelector('.template-container.active');
-      
-      // Temporarily hide the flashing animation to ensure it captures properly
-      const badge = element.querySelector('.flash-badge');
-      badge.style.animation = 'none';
-
-      // PDF Configuration Options
-      const opt = {
-        margin:       0.5,
-        filename:     'Breaking_News_Alert.pdf',
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2, useCORS: true },
-        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-      };
-
-      // Generate PDF
-      html2pdf().set(opt).from(element).save().then(() => {
-        // Restore animation after PDF generation
-        badge.style.animation = ''; 
-      });
     }
   </script>
 
