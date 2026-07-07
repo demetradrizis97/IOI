@@ -3,189 +3,69 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Breaking News Generator</title>
+  <title>News Alert Generator</title>
   
   <style>
     /* Base Styles */
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: #f0f2f5;
-      padding: 20px;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f0f2f5; padding: 20px; margin: 0; display: flex; flex-direction: column; gap: 20px; }
     
-    /* Input Panel Styles */
-    .editor-panel {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    
+    /* Input Panel */
+    .editor-panel { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
     .form-group { margin-bottom: 15px; }
     label { display: block; font-weight: bold; margin-bottom: 5px; }
-    
-    input[type="text"], textarea, select {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-      font-family: inherit;
-    }
+    input[type="text"], textarea, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-family: inherit; }
     textarea { resize: vertical; min-height: 80px; }
-    
-    .btn-export {
-      background-color: #0056b3;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      font-size: 16px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-      margin-top: 10px;
-    }
+    .btn-export { background-color: #0056b3; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 10px; }
     .btn-export:hover { background-color: #004494; }
 
-    /* Preview Panel Styles */
-    .preview-panel {
-      background: #e9ecef;
-      padding: 20px;
-      border-radius: 8px;
-    }
-
-    /* Generic Template Container - Hide others by default */
-    .template-container { display: none; }
+    /* Preview Panel */
+    .preview-panel { background: #e9ecef; padding: 20px; border-radius: 8px; }
+    .template-container { display: none; background-color: #ffffff; border: 1px solid #e0e0e0; padding: 0; font-size: 14px; }
     .template-container.active { display: block; }
+    .top-banner { text-align: center; font-size: 0.7rem; color: #555; text-transform: uppercase; letter-spacing: 1px; padding: 6px; background-color: #f3f3f3; border-bottom: 1px solid #e0e0e0;}
+    .content-row { display: flex; gap: 15px; padding: 15px 20px; border-bottom: 1px solid #eee; }
+    .content-body h3 { text-transform: uppercase; font-size: 0.8rem; font-weight: bold; letter-spacing: 0.5px; margin: 0 0 5px 0; }
+    .content-body div { white-space: pre-wrap; font-size: 0.95rem; line-height: 1.5; }
 
-    /* ================================================= */
-    /* NEW TEMPLATE 1 STYLES (Based on Image)            */
-    /* ================================================= */
-    #template1 {
-      background-color: #ffffff;
-      color: #333;
-      border: 1px solid #e0e0e0;
-      padding: 0;
-      font-size: 14px;
-    }
+    /* --- TEMPLATE 1: Red Flash --- */
+    #template1 .header { background-color: #c8102e; }
+    #template1 .header, #template1 .content-icon { color: white; }
+    #template1 .keyword-text, #template1 .flash-icon { color: #c8102e; }
+    #template1 .flash-icon { background-color: #c8102e; color: white; border-radius: 50%; }
+    #template1 .content-icon { background-color: #c8102e; border-radius: 50%; }
 
-    .t1-header {
-      background-color: #c8102e; /* Strong Red */
-      color: white;
-      padding: 8px 20px;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-size: 0.8rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .t1-flash-section {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      padding: 20px;
-      border-bottom: 1px solid #eee;
-    }
+    /* --- TEMPLATE 2: Orange Alert --- */
+    #template2 .header { background-color: #e87722; }
+    #template2 .header, #template2 .content-icon { color: white; }
+    #template2 .keyword-text, #template2 .alert-icon { color: #e87722; }
+    #template2 .alert-icon { border: 2px solid #e87722; border-radius: 50%; }
+    #template2 .content-icon { background-color: #e87722; border-radius: 50%; }
+   
+    /* --- TEMPLATE 3: Grey Awareness --- */
+    #template3 .header { background-color: #5a6268; }
+    #template3 .header, #template3 .content-icon { color: white; }
+    #template3 .keyword-text, #template3 .awareness-icon { color: #495057; }
+    #template3 .awareness-icon { border: 2px solid #495057; border-radius: 50%; }
+    #template3 .content-icon { background-color: #495057; border-radius: 50%; }
+    #template3 .bind-title { color: #003366; } /* Special blue for headline */
 
-    .t1-flash-icon {
-      background-color: #c8102e;
-      color: white;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      flex-shrink: 0;
-    }
+    /* Shared Template Structure */
+    .header { padding: 8px 20px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center; }
+    .keyword-section { display: flex; align-items: center; gap: 15px; padding: 20px; border-bottom: 1px solid #eee; }
+    .keyword-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+    .keyword-text { font-size: 1.8rem; font-weight: 900; line-height: 1; }
+    .keyword-divider { border-left: 1px solid #ddd; height: 40px; }
+    .keyword-title h2 { margin: 0; font-size: 1.2rem; font-weight: bold; }
+    .keyword-title .bind-timestamp { margin: 0; font-size: 0.9rem; color: #666; }
+    .content-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
 
-    .t1-flash-text {
-      font-size: 1.8rem;
-      font-weight: 900;
-      color: #c8102e;
-      line-height: 1;
-    }
-
-    .t1-flash-divider {
-      border-left: 1px solid #ddd;
-      height: 40px;
-    }
-
-    .t1-flash-title h2 {
-      margin: 0;
-      font-size: 1.2rem;
-      font-weight: bold;
-    }
-    .t1-flash-title .bind-timestamp {
-      margin: 0;
-      font-size: 0.9rem;
-      color: #666;
-    }
-    
-    .t1-content-row {
-      display: flex;
-      gap: 15px;
-      padding: 15px 20px;
-      border-bottom: 1px solid #eee;
-    }
-
-    .t1-content-icon {
-      background-color: #c8102e;
-      color: white;
-      border-radius: 50%;
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      flex-shrink: 0;
-    }
-
-    .t1-content-body h3 {
-      text-transform: uppercase;
-      font-size: 0.8rem;
-      font-weight: bold;
-      letter-spacing: 0.5px;
-      margin: 0 0 5px 0;
-    }
-
-    .t1-content-body div {
-      white-space: pre-wrap; /* Preserves line breaks from textarea */
-      font-size: 0.95rem;
-      line-height: 1.5;
-    }
-
-    /* Fallback styles for other templates */
-    #template2, #template3 { background-color: #f4f4f4; padding: 20px; min-height: 400px; }
-
-    /* ========================================= 
-       PRINT / PDF EXPORT STYLES 
-       ========================================= */
+    /* PRINT STYLES */
     @media print {
-      * {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
       body { background-color: white; padding: 0; margin: 0; }
-      .editor-panel, .preview-panel h2, #template2, #template3 { display: none !important; }
+      .editor-panel, .preview-panel h2, .template-container:not(.active) { display: none !important; }
       .preview-panel { background: transparent; padding: 0; }
-      .template-container.active {
-        display: block !important;
-        box-shadow: none;
-        border-radius: 0;
-        border: none;
-        min-height: 100vh;
-        margin: 0;
-      }
+      .template-container.active { display: block !important; box-shadow: none; border-radius: 0; border: none; min-height: 100vh; margin: 0; }
     }
   </style>
 </head>
@@ -193,92 +73,89 @@
 
   <!-- Input Form Panel -->
   <div class="editor-panel">
-    <h2>News Input Panel</h2>
-    
+    <h2>News Alert Input</h2>
     <div class="form-group">
       <label for="templateSelect">Select Layout:</label>
       <select id="templateSelect" onchange="switchTemplate()">
-        <option value="template1">Layout 1 (Executive Red)</option>
-        <option value="template2">Layout 2 (Placeholder)</option>
-        <option value="template3">Layout 3 (Placeholder)</option>
+        <option value="template1">Layout 1: Red Flash</option>
+        <option value="template2">Layout 2: Orange Alert</option>
+        <option value="template3">Layout 3: Grey Awareness</option>
       </select>
     </div>
-
-    <div class="form-group">
-      <label for="inputTitle">Headline:</label>
-      <input type="text" id="inputTitle" placeholder="e.g., Missile Launch Detected" oninput="updateContent()">
-    </div>
-    
-    <div class="form-group">
-      <label for="inputSummary">Summary:</label>
-      <textarea id="inputSummary" placeholder="Enter brief summary..." oninput="updateContent()"></textarea>
-    </div>
-
-    <div class="form-group">
-      <label for="inputDetails">Key Details:</label>
-      <textarea id="inputDetails" placeholder="List the core facts here..." oninput="updateContent()"></textarea>
-    </div>
-
-    <div class="form-group">
-      <label for="inputActions">Potential Actions:</label>
-      <textarea id="inputActions" placeholder="Enter potential actions..." oninput="updateContent()"></textarea>
-    </div>
-
-    <button class="btn-export" onclick="window.print()">Export to PDF</button>
+    <div class="form-group"> <label for="inputTitle">Headline:</label> <input type="text" id="inputTitle" oninput="updateContent()"> </div>
+    <div class="form-group"> <label for="inputSummary">Summary:</label> <textarea id="inputSummary" oninput="updateContent()"></textarea> </div>
+    <div class="form-group"> <label for="inputDetails">Key Details:</label> <textarea id="inputDetails" oninput="updateContent()"></textarea> </div>
+    <div class="form-group"> <label for="inputActions">Potential Actions:</label> <textarea id="inputActions" oninput="updateContent()"></textarea> </div>
+    <button class="btn-export" onclick="window.print()">Export Active Layout to PDF</button>
   </div>
 
   <!-- Live Preview Panel -->
   <div class="preview-panel">
     <h2>Live Preview</h2>
     
-    <!-- TEMPLATE 1 - NEW DESIGN -->
-    <div id="template1" class="template-container active">
-      <div class="t1-header">
-        <span>★</span>
-        <span>Executive Information</span>
-        <span>★</span>
+    <!-- TEMPLATE 1 -->
+    <div id="template1" class="template-container">
+      <div class="header"> <span>★</span> <span>Executive Information</span> <span>★</span> </div>
+      <div class="keyword-section">
+        <div class="keyword-icon flash-icon">⚡</div> <div class="keyword-text">FLASH</div> <div class="keyword-divider"></div>
+        <div class="keyword-title"> <h2 class="bind-title"></h2> <p class="bind-timestamp"></p> </div>
       </div>
-      <div class="t1-flash-section">
-        <div class="t1-flash-icon">⚡</div>
-        <div class="t1-flash-text">FLASH</div>
-        <div class="t1-flash-divider"></div>
-        <div class="t1-flash-title">
-          <h2 class="bind-title">Awaiting Headline...</h2>
-          <p class="bind-timestamp"></p>
-        </div>
+      <div class="content-row">
+        <div class="content-icon">📄</div>
+        <div class="content-body"> <h3>Summary</h3> <div class="bind-summary"></div> </div>
       </div>
-      <div class="t1-content-row">
-        <div class="t1-content-icon">📄</div>
-        <div class="t1-content-body">
-          <h3>Summary</h3>
-          <div class="bind-summary">Awaiting input...</div>
-        </div>
+      <div class="content-row">
+        <div class="content-icon">🎯</div>
+        <div class="content-body"> <h3>Key Details</h3> <div class="bind-details"></div> </div>
       </div>
-      <div class="t1-content-row">
-        <div class="t1-content-icon">🎯</div>
-        <div class="t1-content-body">
-          <h3>Key Details</h3>
-          <div class="bind-details">Awaiting input...</div>
-        </div>
-      </div>
-      <div class="t1-content-row" style="border-bottom: none;">
-        <div class="t1-content-icon">📋</div>
-        <div class="t1-content-body">
-          <h3>Potential Actions</h3>
-          <div class="bind-actions">Awaiting input...</div>
-        </div>
+      <div class="content-row" style="border-bottom: none;">
+        <div class="content-icon">📋</div>
+        <div class="content-body"> <h3>Potential Actions</h3> <div class="bind-actions"></div> </div>
       </div>
     </div>
 
-    <!-- Other templates are just placeholders now -->
+    <!-- TEMPLATE 2 -->
     <div id="template2" class="template-container">
-      <h2>Layout 2</h2>
-      <p>This is a placeholder for a different design.</p>
+      <div class="top-banner">Item of Interest</div>
+      <div class="header"> <span>★</span> <span>Executive Information</span> <span>★</span> </div>
+      <div class="keyword-section">
+        <div class="keyword-icon alert-icon">⚠️</div> <div class="keyword-text">ALERT</div> <div class="keyword-divider"></div>
+        <div class="keyword-title"> <h2 class="bind-title"></h2> <p class="bind-timestamp"></p> </div>
+      </div>
+      <div class="content-row">
+        <div class="content-icon">📄</div>
+        <div class="content-body"> <h3>Summary</h3> <div class="bind-summary"></div> </div>
+      </div>
+      <div class="content-row">
+        <div class="content-icon">🎯</div>
+        <div class="content-body"> <h3>Key Details</h3> <div class="bind-details"></div> </div>
+      </div>
+      <div class="content-row" style="border-bottom: none;">
+        <div class="content-icon">📋</div>
+        <div class="content-body"> <h3>Potential Actions</h3> <div class="bind-actions"></div> </div>
+      </div>
     </div>
 
+    <!-- TEMPLATE 3 -->
     <div id="template3" class="template-container">
-      <h2>Layout 3</h2>
-      <p>This is a placeholder for a different design.</p>
+      <div class="top-banner">Item of Interest</div>
+      <div class="header"> <span>★</span> <span>Executive Information</span> <span>★</span> </div>
+      <div class="keyword-section">
+        <div class="keyword-icon awareness-icon">ⓘ</div> <div class="keyword-text">AWARENESS</div> <div class="keyword-divider"></div>
+        <div class="keyword-title"> <h2 class="bind-title"></h2> <p class="bind-timestamp"></p> </div>
+      </div>
+      <div class="content-row">
+        <div class="content-icon">📄</div>
+        <div class="content-body"> <h3>Summary</h3> <div class="bind-summary"></div> </div>
+      </div>
+      <div class="content-row">
+        <div class="content-icon">🎯</div>
+        <div class="content-body"> <h3>Key Details</h3> <div class="bind-details"></div> </div>
+      </div>
+      <div class="content-row" style="border-bottom: none;">
+        <div class="content-icon">📋</div>
+        <div class="content-body"> <h3>Potential Actions</h3> <div class="bind-actions"></div> </div>
+      </div>
     </div>
   </div>
 
@@ -286,23 +163,20 @@
   <script>
     function switchTemplate() {
       const selectedId = document.getElementById('templateSelect').value;
-      const templates = document.querySelectorAll('.template-container');
-      templates.forEach(template => template.classList.remove('active'));
+      document.querySelectorAll('.template-container').forEach(t => t.classList.remove('active'));
       document.getElementById(selectedId).classList.add('active');
       updateContent(); 
     }
 
     function updateContent() {
-      const titleText = document.getElementById('inputTitle').value || 'Awaiting Headline...';
-      const summaryText = document.getElementById('inputSummary').value || 'Awaiting input...';
-      const detailsText = document.getElementById('inputDetails').value || 'Awaiting input...';
-      const actionsText = document.getElementById('inputActions').value || 'Awaiting input...';
+      const defaults = { title: 'Awaiting Headline...', summary: 'Awaiting input...', details: 'Awaiting input...', actions: 'Awaiting input...' };
+      const titleText = document.getElementById('inputTitle').value || defaults.title;
+      const summaryText = document.getElementById('inputSummary').value || defaults.summary;
+      const detailsText = document.getElementById('inputDetails').value || defaults.details;
+      const actionsText = document.getElementById('inputActions').value || defaults.actions;
       
       const now = new Date();
-      const timestamp = now.toLocaleString('en-US', {
-        weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', 
-        hour: '2-digit', minute: '2-digit', timeZoneName: 'short'
-      });
+      const timestamp = now.toLocaleString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' });
       
       document.querySelectorAll('.bind-title').forEach(el => el.innerText = titleText);
       document.querySelectorAll('.bind-summary').forEach(el => el.innerText = summaryText);
@@ -311,8 +185,9 @@
       document.querySelectorAll('.bind-timestamp').forEach(el => el.innerText = timestamp);
     }
     
-    // Initial content load
-    window.onload = updateContent;
+    window.onload = () => {
+        switchTemplate();
+    };
   </script>
 
 </body>
