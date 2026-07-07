@@ -19,7 +19,6 @@
       gap: 20px;
     }
     
-    /* Input Control Panel */
     .editor-panel {
       background: #ffffff;
       padding: 20px;
@@ -27,254 +26,86 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     
-    .form-group {
-      margin-bottom: 15px;
-    }
-    
-    label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 5px;
-      color: #333;
-    }
+    .form-group { margin-bottom: 15px; }
+    label { display: block; font-weight: bold; margin-bottom: 5px; color: #333; }
     
     input[type="text"], textarea, select {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      box-sizing: border-box;
-      font-family: inherit;
-      font-size: 14px;
+      width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-family: inherit; font-size: 14px;
     }
-    
-    textarea {
-      resize: vertical;
-      min-height: 80px;
-    }
+    textarea { resize: vertical; min-height: 80px; }
     
     .btn-export {
-      background-color: #0056b3;
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      font-size: 16px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: bold;
-      margin-top: 10px;
-      transition: background 0.2s ease;
+      background-color: #0056b3; color: white; border: none; padding: 12px 24px; font-size: 16px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 10px; transition: background 0.2s ease;
     }
-    
-    .btn-export:hover {
-      background-color: #004494;
-    }
+    .btn-export:hover { background-color: #004494; }
 
-    /* Live Preview Section */
-    .preview-panel {
-      background: #e9ecef;
-      padding: 20px;
-      border-radius: 8px;
-    }
+    .preview-panel { background: #e9ecef; padding: 20px; border-radius: 8px; }
+    .preview-title { margin-top: 0; color: #333; font-size: 1.2rem; border-bottom: 2px solid #ccc; padding-bottom: 8px; margin-bottom: 15px; }
 
-    .preview-title {
-      margin-top: 0;
-      color: #333;
-      font-size: 1.2rem;
-      border-bottom: 2px solid #ccc;
-      padding-bottom: 8px;
-      margin-bottom: 15px;
-    }
-
-    /* Template Containers */
     .template-container {
-      display: none; /* Controlled by switchTemplate() JS */
-      background-color: #ffffff;
-      border: 1px solid #d3d3d3;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      font-size: 14px;
-      max-width: 800px;
-      margin: 0 auto;
+      display: none; background-color: #ffffff; border: 1px solid #d3d3d3; box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-size: 14px; max-width: 800px; margin: 0 auto;
     }
-    
-    .template-container.active {
-      display: block;
-    }
+    .template-container.active { display: block; }
 
     /* ================================================= */
     /* SHARED NEWS TEMPLATE COMPONENT STYLES             */
     /* ================================================= */
     .top-banner {
-      text-align: center;
-      font-size: 0.75rem;
-      color: #555;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      padding: 8px;
-      background-color: #f5f5f5;
-      border-bottom: 1px solid #e0e0e0;
-      font-weight: 600;
+      text-align: center; font-size: 0.75rem; color: #555; text-transform: uppercase; letter-spacing: 1.5px; padding: 8px; background-color: #f5f5f5; border-bottom: 1px solid #e0e0e0; font-weight: 600;
     }
     
     .header {
-      color: white;
-      padding: 10px 20px;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-size: 0.85rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      color: white; padding: 10px 20px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center;
     }
 
-    .keyword-section {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      padding: 20px;
-      border-bottom: 1px solid #eee;
-    }
+    .keyword-section { display: flex; align-items: center; gap: 20px; padding: 20px; border-bottom: 1px solid #eee; }
+    .keyword-icon { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .keyword-text { font-size: 1.9rem; font-weight: 900; line-height: 1; letter-spacing: 0.5px; }
+    .keyword-divider { border-left: 1px solid #ddd; height: 44px; }
+    
+    .keyword-title { display: flex; flex-direction: column; gap: 4px; }
+    .keyword-title h2 { margin: 0; font-size: 1.25rem; font-weight: 700; color: #111111; }
+    .keyword-title .bind-timestamp { margin: 0; font-size: 0.85rem; color: #666; }
 
-    .keyword-icon {
-      width: 44px;
-      height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      flex-shrink: 0;
-    }
-
-    .keyword-text {
-      font-size: 1.9rem;
-      font-weight: 900;
-      line-height: 1;
-      letter-spacing: 0.5px;
-    }
-
-    .keyword-divider {
-      border-left: 1px solid #ddd;
-      height: 44px;
-    }
-
-    .keyword-title {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .keyword-title h2 {
-      margin: 0;
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #111111;
-    }
-
-    .keyword-title .bind-timestamp {
-      margin: 0;
-      font-size: 0.85rem;
-      color: #666;
-    }
-
-    .content-row {
-      display: flex;
-      gap: 15px;
-      padding: 20px;
-      border-bottom: 1px solid #f0f0f0;
-    }
-
-    .content-icon {
-      width: 34px;
-      height: 34px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      flex-shrink: 0;
-      color: white;
-    }
-
-    .content-body {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .content-body h3 {
-      text-transform: uppercase;
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.8px;
-      margin: 0;
-      color: #555;
-    }
-
-    .content-body div {
-      white-space: pre-wrap;
-      font-size: 0.95rem;
-      line-height: 1.5;
-      color: #222;
-    }
+    .content-row { display: flex; gap: 15px; padding: 20px; border-bottom: 1px solid #f0f0f0; }
+    .content-icon { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    
+    .content-body { display: flex; flex-direction: column; gap: 4px; }
+    .content-body h3 { text-transform: uppercase; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.8px; margin: 0; color: #555; }
+    .content-body div { white-space: pre-wrap; font-size: 0.95rem; line-height: 1.5; color: #222; }
 
     /* ================================================= */
-    /* THEME INDIVIDUAL OVERRIDES                        */
+    /* THEME SOLID CIRCLE OVERRIDES                      */
     /* ================================================= */
     
-    /* Layout 1 - RED FLASH Overrides */
+    /* Layout 1 - RED FLASH */
     #template1 .header { background-color: #c8102e; }
     #template1 .keyword-text { color: #c8102e; }
-    #template1 .flash-icon { background-color: #c8102e; color: white; border-radius: 50%; }
+    #template1 .flash-icon { background-color: #c8102e; border-radius: 50%; }
     #template1 .content-icon { background-color: #c8102e; border-radius: 50%; }
 
-    /* Layout 2 - ORANGE ALERT Overrides */
+    /* Layout 2 - ORANGE ALERT */
     #template2 .header { background-color: #e87722; }
     #template2 .keyword-text { color: #e87722; }
-    #template2 .alert-icon { border: 2.5px solid #e87722; color: #e87722; border-radius: 50%; width: 39px; height: 39px; }
+    #template2 .alert-icon { background-color: #e87722; border-radius: 50%; }
     #template2 .content-icon { background-color: #e87722; border-radius: 50%; }
    
-    /* Layout 3 - GREY AWARENESS Overrides */
+    /* Layout 3 - GREY AWARENESS */
     #template3 .header { background-color: #5a6268; }
-    #template3 .keyword-text { color: #495057; }
-    #template3 .awareness-icon { border: 2.5px solid #495057; color: #495057; border-radius: 50%; width: 39px; height: 39px; }
-    #template3 .content-icon { background-color: #495057; border-radius: 50%; }
-    #template3 .bind-title { color: #003366; } /* Special blue-grey headline style */
+    #template3 .keyword-text { color: #5a6268; }
+    #template3 .awareness-icon { background-color: #5a6268; border-radius: 50%; }
+    #template3 .content-icon { background-color: #5a6268; border-radius: 50%; }
+    #template3 .bind-title { color: #003366; } 
 
     /* ================================================= */
     /* PDF EXPORT / PRINT RULES                          */
     /* ================================================= */
     @media print {
-      * {
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
-      
-      body {
-        background-color: white;
-        padding: 0;
-        margin: 0;
-      }
-      
-      /* Hide all UI elements except the active template preview */
-      .editor-panel, 
-      .preview-panel h2, 
-      .template-container:not(.active) {
-        display: none !important;
-      }
-      
-      .preview-panel {
-        background: transparent;
-        padding: 0;
-      }
-      
-      .template-container.active {
-        display: block !important;
-        box-shadow: none;
-        border: none;
-        max-width: 100%;
-        min-height: 100vh;
-        margin: 0;
-      }
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      body { background-color: white; padding: 0; margin: 0; }
+      .editor-panel, .preview-panel h2, .template-container:not(.active) { display: none !important; }
+      .preview-panel { background: transparent; padding: 0; }
+      .template-container.active { display: block !important; box-shadow: none; border: none; max-width: 100%; min-height: 100vh; margin: 0; }
     }
   </style>
 </head>
@@ -283,36 +114,30 @@
   <!-- Input Form Panel -->
   <div class="editor-panel">
     <h2>News Alert Editor</h2>
-    
     <div class="form-group">
       <label for="templateSelect">Select Document Template Layout:</label>
       <select id="templateSelect" onchange="switchTemplate()">
-        <option value="template1">Layout 1: Red Flash Header (No Top Banner)</option>
-        <option value="template2">Layout 2: Orange Alert Header (With Top Banner)</option>
-        <option value="template3">Layout 3: Grey Awareness Header (With Top Banner & Blue Headline)</option>
+        <option value="template1">Layout 1: Red Flash Header</option>
+        <option value="template2">Layout 2: Orange Alert Header</option>
+        <option value="template3">Layout 3: Grey Awareness Header</option>
       </select>
     </div>
-    
     <div class="form-group">
       <label for="inputTitle">Headline:</label>
       <input type="text" id="inputTitle" placeholder="e.g., Missile Launch Detected" oninput="updateContent()">
     </div>
-    
     <div class="form-group">
       <label for="inputSummary">Summary:</label>
       <textarea id="inputSummary" placeholder="Provide a brief introductory summary..." oninput="updateContent()"></textarea>
     </div>
-
     <div class="form-group">
       <label for="inputDetails">Key Details:</label>
       <textarea id="inputDetails" placeholder="List core facts, points, and structural data..." oninput="updateContent()"></textarea>
     </div>
-
     <div class="form-group">
       <label for="inputActions">Potential Actions:</label>
       <textarea id="inputActions" placeholder="Outline recommendations or target reactions..." oninput="updateContent()"></textarea>
     </div>
-
     <button class="btn-export" onclick="window.print()">Export Active Layout to PDF</button>
   </div>
 
@@ -322,165 +147,96 @@
     
     <!-- LAYOUT 1: RED FLASH -->
     <div id="template1" class="template-container">
-      <div class="header">
-        <span>★</span>
-        <span>Executive Information</span>
-        <span>★</span>
-      </div>
+      <div class="header"> <span>★</span> <span>Executive Information</span> <span>★</span> </div>
       <div class="keyword-section">
-        <div class="keyword-icon flash-icon">⚡</div>
+        <div class="keyword-icon flash-icon">
+          <!-- Lightning Bolt SVG -->
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
+        </div>
         <div class="keyword-text">FLASH</div>
         <div class="keyword-divider"></div>
-        <div class="keyword-title">
-          <h2 class="bind-title"></h2>
-          <p class="bind-timestamp"></p>
-        </div>
+        <div class="keyword-title"> <h2 class="bind-title"></h2> <p class="bind-timestamp"></p> </div>
       </div>
-      <div class="content-row">
-        <div class="content-icon">📄</div>
-        <div class="content-body">
-          <h3>Summary</h3>
-          <div class="bind-summary"></div>
-        </div>
-      </div>
-      <div class="content-row">
-        <div class="content-icon">🎯</div>
-        <div class="content-body">
-          <h3>Key Details</h3>
-          <div class="bind-details"></div>
-        </div>
-      </div>
-      <div class="content-row" style="border-bottom: none;">
-        <div class="content-icon">📋</div>
-        <div class="content-body">
-          <h3>Potential Actions</h3>
-          <div class="bind-actions"></div>
-        </div>
-      </div>
+      <!-- Included Content Rows (See JS for injection to avoid repeating code) -->
+      <div class="injected-content"></div>
     </div>
 
     <!-- LAYOUT 2: ORANGE ALERT -->
     <div id="template2" class="template-container">
       <div class="top-banner">Item of Interest</div>
-      <div class="header">
-        <span>★</span>
-        <span>Executive Information</span>
-        <span>★</span>
-      </div>
+      <div class="header"> <span>★</span> <span>Executive Information</span> <span>★</span> </div>
       <div class="keyword-section">
-        <div class="keyword-icon alert-icon">⚠️</div>
+        <div class="keyword-icon alert-icon">
+          <!-- Warning Triangle SVG -->
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+        </div>
         <div class="keyword-text">ALERT</div>
         <div class="keyword-divider"></div>
-        <div class="keyword-title">
-          <h2 class="bind-title"></h2>
-          <p class="bind-timestamp"></p>
-        </div>
+        <div class="keyword-title"> <h2 class="bind-title"></h2> <p class="bind-timestamp"></p> </div>
       </div>
-      <div class="content-row">
-        <div class="content-icon">📄</div>
-        <div class="content-body">
-          <h3>Summary</h3>
-          <div class="bind-summary"></div>
-        </div>
-      </div>
-      <div class="content-row">
-        <div class="content-icon">🎯</div>
-        <div class="content-body">
-          <h3>Key Details</h3>
-          <div class="bind-details"></div>
-        </div>
-      </div>
-      <div class="content-row" style="border-bottom: none;">
-        <div class="content-icon">📋</div>
-        <div class="content-body">
-          <h3>Potential Actions</h3>
-          <div class="bind-actions"></div>
-        </div>
-      </div>
+      <div class="injected-content"></div>
     </div>
 
     <!-- LAYOUT 3: GREY AWARENESS -->
     <div id="template3" class="template-container">
       <div class="top-banner">Item of Interest</div>
-      <div class="header">
-        <span>★</span>
-        <span>Executive Information</span>
-        <span>★</span>
-      </div>
+      <div class="header"> <span>★</span> <span>Executive Information</span> <span>★</span> </div>
       <div class="keyword-section">
-        <div class="keyword-icon awareness-icon">ⓘ</div>
+        <div class="keyword-icon awareness-icon">
+          <!-- Info Circle SVG -->
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        </div>
         <div class="keyword-text">AWARENESS</div>
         <div class="keyword-divider"></div>
-        <div class="keyword-title">
-          <h2 class="bind-title"></h2>
-          <p class="bind-timestamp"></p>
-        </div>
+        <div class="keyword-title"> <h2 class="bind-title"></h2> <p class="bind-timestamp"></p> </div>
       </div>
-      <div class="content-row">
-        <div class="content-icon">📄</div>
-        <div class="content-body">
-          <h3>Summary</h3>
-          <div class="bind-summary"></div>
-        </div>
-      </div>
-      <div class="content-row">
-        <div class="content-icon">🎯</div>
-        <div class="content-body">
-          <h3>Key Details</h3>
-          <div class="bind-details"></div>
-        </div>
-      </div>
-      <div class="content-row" style="border-bottom: none;">
-        <div class="content-icon">📋</div>
-        <div class="content-body">
-          <h3>Potential Actions</h3>
-          <div class="bind-actions"></div>
-        </div>
-      </div>
+      <div class="injected-content"></div>
     </div>
   </div>
 
   <!-- Javascript Core Logic -->
   <script>
+    // Pure White SVGs for the body content
+    const summarySvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`;
+    const detailsSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm0-7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>`;
+    const actionsSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>`;
+
+    // Inject content layout with SVGs into all templates to keep HTML clean
+    const bodyContentHTML = `
+      <div class="content-row">
+        <div class="content-icon">${summarySvg}</div>
+        <div class="content-body"> <h3>Summary</h3> <div class="bind-summary"></div> </div>
+      </div>
+      <div class="content-row">
+        <div class="content-icon">${detailsSvg}</div>
+        <div class="content-body"> <h3>Key Details</h3> <div class="bind-details"></div> </div>
+      </div>
+      <div class="content-row" style="border-bottom: none;">
+        <div class="content-icon">${actionsSvg}</div>
+        <div class="content-body"> <h3>Potential Actions</h3> <div class="bind-actions"></div> </div>
+      </div>
+    `;
+
+    document.querySelectorAll('.injected-content').forEach(el => el.innerHTML = bodyContentHTML);
+
     function switchTemplate() {
       const selectedId = document.getElementById('templateSelect').value;
-      
-      // Hide all layouts
       document.querySelectorAll('.template-container').forEach(t => t.classList.remove('active'));
-      
-      // Display the chosen layout
       document.getElementById(selectedId).classList.add('active');
       updateContent(); 
     }
 
     function updateContent() {
-      // Define Fallbacks
-      const defaults = { 
-        title: 'Awaiting Headline...', 
-        summary: 'Awaiting input...', 
-        details: 'Awaiting input...', 
-        actions: 'Awaiting input...' 
-      };
+      const defaults = { title: 'Awaiting Headline...', summary: 'Awaiting input...', details: 'Awaiting input...', actions: 'Awaiting input...' };
       
-      // Grab Current Values
       const titleText = document.getElementById('inputTitle').value || defaults.title;
       const summaryText = document.getElementById('inputSummary').value || defaults.summary;
       const detailsText = document.getElementById('inputDetails').value || defaults.details;
       const actionsText = document.getElementById('inputActions').value || defaults.actions;
       
-      // Build Time Stamp format
       const now = new Date();
-      const timestamp = now.toLocaleString('en-US', { 
-        weekday: 'long', 
-        month: 'long', 
-        day: 'numeric', 
-        year: 'numeric', 
-        hour: '2-digit', 
-        minute: '2-digit', 
-        timeZoneName: 'short' 
-      });
+      const timestamp = now.toLocaleString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' });
       
-      // Bind data to all elements matching template classes
       document.querySelectorAll('.bind-title').forEach(el => el.innerText = titleText);
       document.querySelectorAll('.bind-summary').forEach(el => el.innerText = summaryText);
       document.querySelectorAll('.bind-details').forEach(el => el.innerText = detailsText);
@@ -488,10 +244,7 @@
       document.querySelectorAll('.bind-timestamp').forEach(el => el.innerText = timestamp);
     }
     
-    // Boot Initialization
-    window.onload = () => {
-        switchTemplate();
-    };
+    window.onload = () => { switchTemplate(); };
   </script>
 
 </body>
