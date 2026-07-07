@@ -6,8 +6,9 @@
   <title>Breaking News Generator</title>
   
   <style>
+    /* Base Styles */
     body {
-      font-family: 'Arial', sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background-color: #f0f2f5;
       padding: 20px;
       margin: 0;
@@ -57,81 +58,131 @@
       border-radius: 8px;
     }
 
-    .template-container {
-      display: none;
-      position: relative;
-      padding: 40px;
-      border-radius: 8px;
-      background-color: white;
-      min-height: 400px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
+    /* Generic Template Container - Hide others by default */
+    .template-container { display: none; }
     .template-container.active { display: block; }
 
-    /* FLASH Badge */
-    .flash-badge {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      background-color: #ff0000;
-      color: #ffffff;
-      font-weight: 900;
-      font-size: 1.2rem;
-      padding: 5px 15px;
-      border-radius: 4px;
-      letter-spacing: 2px;
+    /* ================================================= */
+    /* NEW TEMPLATE 1 STYLES (Based on Image)            */
+    /* ================================================= */
+    #template1 {
+      background-color: #ffffff;
+      color: #333;
+      border: 1px solid #e0e0e0;
+      padding: 0;
+      font-size: 14px;
     }
 
-    /* Content Sections */
-    .content-section {
-      margin-bottom: 20px;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 15px;
-      border-radius: 4px;
+    .t1-header {
+      background-color: #c8102e; /* Strong Red */
+      color: white;
+      padding: 8px 20px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    .content-section h3 { margin-top: 0; font-size: 1.1rem; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 5px;}
-
-    /* Template Themes */
-    #template1 { background-color: #1a1a1a; color: white; border-top: 10px solid #ff0000; }
-    #template2 { background-color: #f4f4f4; color: #333; border-left: 10px solid #0056b3; }
-    #template2 .content-section { background: white; border: 1px solid #ddd; }
-    #template2 .content-section h3 { border-bottom: 1px solid #ddd; }
-    #template3 { background-color: #8b0000; color: white; border: 5px solid #ffcc00; }
     
-    h1 { margin-top: 0; font-size: 2.5rem; text-transform: uppercase; margin-bottom: 30px;}
+    .t1-flash-section {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 20px;
+      border-bottom: 1px solid #eee;
+    }
 
-    /* =========================================
+    .t1-flash-icon {
+      background-color: #c8102e;
+      color: white;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .t1-flash-text {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #c8102e;
+      line-height: 1;
+    }
+
+    .t1-flash-divider {
+      border-left: 1px solid #ddd;
+      height: 40px;
+    }
+
+    .t1-flash-title h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    .t1-flash-title .bind-timestamp {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #666;
+    }
+    
+    .t1-content-row {
+      display: flex;
+      gap: 15px;
+      padding: 15px 20px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .t1-content-icon {
+      background-color: #c8102e;
+      color: white;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .t1-content-body h3 {
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      margin: 0 0 5px 0;
+    }
+
+    .t1-content-body div {
+      white-space: pre-wrap; /* Preserves line breaks from textarea */
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    /* Fallback styles for other templates */
+    #template2, #template3 { background-color: #f4f4f4; padding: 20px; min-height: 400px; }
+
+    /* ========================================= 
        PRINT / PDF EXPORT STYLES 
        ========================================= */
     @media print {
-      /* Force background colors to print */
       * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
       }
-      
-      body {
-        background-color: white;
-        padding: 0;
-        margin: 0;
-      }
-
-      /* Hide the input panel and preview titles completely */
-      .editor-panel, 
-      .preview-panel h2 {
-        display: none !important;
-      }
-
-      /* Remove formatting from the preview wrapper so the template takes over */
-      .preview-panel {
-        background: transparent;
-        padding: 0;
-      }
-
-      /* Expand the template to fill the PDF page */
-      .template-container {
+      body { background-color: white; padding: 0; margin: 0; }
+      .editor-panel, .preview-panel h2, #template2, #template3 { display: none !important; }
+      .preview-panel { background: transparent; padding: 0; }
+      .template-container.active {
+        display: block !important;
         box-shadow: none;
         border-radius: 0;
+        border: none;
         min-height: 100vh;
         margin: 0;
       }
@@ -147,15 +198,20 @@
     <div class="form-group">
       <label for="templateSelect">Select Layout:</label>
       <select id="templateSelect" onchange="switchTemplate()">
-        <option value="template1">Layout 1 (Dark Theme)</option>
-        <option value="template2">Layout 2 (Light & Blue Theme)</option>
-        <option value="template3">Layout 3 (Crimson Alert Theme)</option>
+        <option value="template1">Layout 1 (Executive Red)</option>
+        <option value="template2">Layout 2 (Placeholder)</option>
+        <option value="template3">Layout 3 (Placeholder)</option>
       </select>
     </div>
 
     <div class="form-group">
-      <label for="inputSummary">Summary Headline:</label>
-      <input type="text" id="inputSummary" placeholder="Enter brief summary or headline..." oninput="updateContent()">
+      <label for="inputTitle">Headline:</label>
+      <input type="text" id="inputTitle" placeholder="e.g., Missile Launch Detected" oninput="updateContent()">
+    </div>
+    
+    <div class="form-group">
+      <label for="inputSummary">Summary:</label>
+      <textarea id="inputSummary" placeholder="Enter brief summary..." oninput="updateContent()"></textarea>
     </div>
 
     <div class="form-group">
@@ -164,11 +220,10 @@
     </div>
 
     <div class="form-group">
-      <label for="inputMap">Map / Location Info:</label>
-      <textarea id="inputMap" placeholder="Enter location details, coordinates, or map link..." oninput="updateContent()"></textarea>
+      <label for="inputActions">Potential Actions:</label>
+      <textarea id="inputActions" placeholder="Enter potential actions..." oninput="updateContent()"></textarea>
     </div>
 
-    <!-- This button now triggers the browser's native print-to-pdf -->
     <button class="btn-export" onclick="window.print()">Export to PDF</button>
   </div>
 
@@ -176,55 +231,54 @@
   <div class="preview-panel">
     <h2>Live Preview</h2>
     
+    <!-- TEMPLATE 1 - NEW DESIGN -->
     <div id="template1" class="template-container active">
-      <div class="flash-badge">FLASH</div>
-      <h1>Breaking News</h1>
-      <div class="content-section">
-        <h3>Summary</h3>
-        <div class="bind-summary">Awaiting input...</div>
+      <div class="t1-header">
+        <span>★</span>
+        <span>Executive Information</span>
+        <span>★</span>
       </div>
-      <div class="content-section">
-        <h3>Key Details</h3>
-        <div class="bind-details" style="white-space: pre-wrap;">Awaiting input...</div>
+      <div class="t1-flash-section">
+        <div class="t1-flash-icon">⚡</div>
+        <div class="t1-flash-text">FLASH</div>
+        <div class="t1-flash-divider"></div>
+        <div class="t1-flash-title">
+          <h2 class="bind-title">Awaiting Headline...</h2>
+          <p class="bind-timestamp"></p>
+        </div>
       </div>
-      <div class="content-section">
-        <h3>Map & Location</h3>
-        <div class="bind-map" style="white-space: pre-wrap;">Awaiting input...</div>
+      <div class="t1-content-row">
+        <div class="t1-content-icon">📄</div>
+        <div class="t1-content-body">
+          <h3>Summary</h3>
+          <div class="bind-summary">Awaiting input...</div>
+        </div>
+      </div>
+      <div class="t1-content-row">
+        <div class="t1-content-icon">🎯</div>
+        <div class="t1-content-body">
+          <h3>Key Details</h3>
+          <div class="bind-details">Awaiting input...</div>
+        </div>
+      </div>
+      <div class="t1-content-row" style="border-bottom: none;">
+        <div class="t1-content-icon">📋</div>
+        <div class="t1-content-body">
+          <h3>Potential Actions</h3>
+          <div class="bind-actions">Awaiting input...</div>
+        </div>
       </div>
     </div>
 
+    <!-- Other templates are just placeholders now -->
     <div id="template2" class="template-container">
-      <div class="flash-badge">FLASH</div>
-      <h1>Urgent Update</h1>
-      <div class="content-section">
-        <h3>Summary</h3>
-        <div class="bind-summary">Awaiting input...</div>
-      </div>
-      <div class="content-section">
-        <h3>Key Details</h3>
-        <div class="bind-details" style="white-space: pre-wrap;">Awaiting input...</div>
-      </div>
-      <div class="content-section">
-        <h3>Map & Location</h3>
-        <div class="bind-map" style="white-space: pre-wrap;">Awaiting input...</div>
-      </div>
+      <h2>Layout 2</h2>
+      <p>This is a placeholder for a different design.</p>
     </div>
 
     <div id="template3" class="template-container">
-      <div class="flash-badge">FLASH</div>
-      <h1>Critical Alert</h1>
-      <div class="content-section">
-        <h3>Summary</h3>
-        <div class="bind-summary">Awaiting input...</div>
-      </div>
-      <div class="content-section">
-        <h3>Key Details</h3>
-        <div class="bind-details" style="white-space: pre-wrap;">Awaiting input...</div>
-      </div>
-      <div class="content-section">
-        <h3>Map & Location</h3>
-        <div class="bind-map" style="white-space: pre-wrap;">Awaiting input...</div>
-      </div>
+      <h2>Layout 3</h2>
+      <p>This is a placeholder for a different design.</p>
     </div>
   </div>
 
@@ -239,14 +293,26 @@
     }
 
     function updateContent() {
+      const titleText = document.getElementById('inputTitle').value || 'Awaiting Headline...';
       const summaryText = document.getElementById('inputSummary').value || 'Awaiting input...';
       const detailsText = document.getElementById('inputDetails').value || 'Awaiting input...';
-      const mapText = document.getElementById('inputMap').value || 'Awaiting input...';
-
+      const actionsText = document.getElementById('inputActions').value || 'Awaiting input...';
+      
+      const now = new Date();
+      const timestamp = now.toLocaleString('en-US', {
+        weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', 
+        hour: '2-digit', minute: '2-digit', timeZoneName: 'short'
+      });
+      
+      document.querySelectorAll('.bind-title').forEach(el => el.innerText = titleText);
       document.querySelectorAll('.bind-summary').forEach(el => el.innerText = summaryText);
       document.querySelectorAll('.bind-details').forEach(el => el.innerText = detailsText);
-      document.querySelectorAll('.bind-map').forEach(el => el.innerText = mapText);
+      document.querySelectorAll('.bind-actions').forEach(el => el.innerText = actionsText);
+      document.querySelectorAll('.bind-timestamp').forEach(el => el.innerText = timestamp);
     }
+    
+    // Initial content load
+    window.onload = updateContent;
   </script>
 
 </body>
