@@ -76,9 +76,18 @@
     .content-body h3 { text-transform: uppercase; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.8px; margin: 0; color: #555; }
     .content-body div { white-space: pre-wrap; font-size: 0.95rem; line-height: 1.5; color: #222; }
 
-    /* Image specific styles */
-    .image-row { display: none; padding-top: 5px; padding-bottom: 5px; border-bottom: none; }
-    .bind-image { max-width: 100%; max-height: 400px; object-fit: contain; border-radius: 4px; border: 1px solid #e0e0e0; margin-top: 10px; }
+    /* Image specific styles - UPDATED TO FILL BOX */
+    .image-row { display: none; padding-top: 15px; padding-bottom: 5px; border-bottom: none; }
+    .bind-image { 
+      width: 100%; 
+      height: auto;
+      max-height: 450px; 
+      object-fit: cover; 
+      object-position: center;
+      border-radius: 4px; 
+      border: 1px solid #e0e0e0; 
+      display: block;
+    }
 
     /* ================================================= */
     /* THEME SOLID CIRCLE OVERRIDES                      */
@@ -105,7 +114,7 @@
       .editor-panel, .preview-panel h2, .template-container:not(.active) { display: none !important; }
       .preview-panel { background: transparent; padding: 0; }
       .template-container.active { display: block !important; box-shadow: none; border: none; max-width: 100%; min-height: 100vh; margin: 0; }
-      .bind-image { max-height: 350px; } /* Ensures image doesn't force a page break awkwardly */
+      .bind-image { max-height: 400px; } /* Ensures image doesn't force a page break awkwardly */
     }
   </style>
 </head>
@@ -127,7 +136,6 @@
       <input type="text" id="inputTitle" placeholder="e.g., Missile Launch Detected" oninput="updateContent()">
     </div>
     
-    <!-- NEW IMAGE UPLOAD FIELD -->
     <div class="form-group">
       <label for="inputImage">Attach Image (Optional):</label>
       <input type="file" id="inputImage" accept="image/*" onchange="loadImage(event)">
@@ -266,12 +274,11 @@
             img.src = dataUrl;
           });
           document.querySelectorAll('.image-row').forEach(row => {
-            row.style.display = 'flex'; // Unhide the image row
+            row.style.display = 'flex'; 
           });
         }
         reader.readAsDataURL(file);
       } else {
-        // Hide the image row if input is cleared
         document.querySelectorAll('.image-row').forEach(row => {
           row.style.display = 'none';
         });
