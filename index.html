@@ -159,4 +159,108 @@
     <h2>Live Preview</h2>
     
     <!-- Template 1 -->
-    <div id="templa
+    <div id="template1" class="template-container active">
+      <div class="flash-badge">FLASH</div>
+      <h1>Breaking News</h1>
+      <div class="content-section">
+        <h3>Summary</h3>
+        <div class="bind-summary">Awaiting input...</div>
+      </div>
+      <div class="content-section">
+        <h3>Key Details</h3>
+        <div class="bind-details" style="white-space: pre-wrap;">Awaiting input...</div>
+      </div>
+      <div class="content-section">
+        <h3>Map & Location</h3>
+        <div class="bind-map" style="white-space: pre-wrap;">Awaiting input...</div>
+      </div>
+    </div>
+
+    <!-- Template 2 -->
+    <div id="template2" class="template-container">
+      <div class="flash-badge">FLASH</div>
+      <h1>Urgent Update</h1>
+      <div class="content-section">
+        <h3>Summary</h3>
+        <div class="bind-summary">Awaiting input...</div>
+      </div>
+      <div class="content-section">
+        <h3>Key Details</h3>
+        <div class="bind-details" style="white-space: pre-wrap;">Awaiting input...</div>
+      </div>
+      <div class="content-section">
+        <h3>Map & Location</h3>
+        <div class="bind-map" style="white-space: pre-wrap;">Awaiting input...</div>
+      </div>
+    </div>
+
+    <!-- Template 3 -->
+    <div id="template3" class="template-container">
+      <div class="flash-badge">FLASH</div>
+      <h1>Critical Alert</h1>
+      <div class="content-section">
+        <h3>Summary</h3>
+        <div class="bind-summary">Awaiting input...</div>
+      </div>
+      <div class="content-section">
+        <h3>Key Details</h3>
+        <div class="bind-details" style="white-space: pre-wrap;">Awaiting input...</div>
+      </div>
+      <div class="content-section">
+        <h3>Map & Location</h3>
+        <div class="bind-map" style="white-space: pre-wrap;">Awaiting input...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Logic -->
+  <script>
+    // Switch between templates
+    function switchTemplate() {
+      const selectedId = document.getElementById('templateSelect').value;
+      const templates = document.querySelectorAll('.template-container');
+      templates.forEach(template => template.classList.remove('active'));
+      document.getElementById(selectedId).classList.add('active');
+      updateContent(); // Ensure current text is applied to the newly visible template
+    }
+
+    // Sync input fields with the active template
+    function updateContent() {
+      const summaryText = document.getElementById('inputSummary').value || 'Awaiting input...';
+      const detailsText = document.getElementById('inputDetails').value || 'Awaiting input...';
+      const mapText = document.getElementById('inputMap').value || 'Awaiting input...';
+
+      // Update all templates so data persists when switching
+      document.querySelectorAll('.bind-summary').forEach(el => el.innerText = summaryText);
+      document.querySelectorAll('.bind-details').forEach(el => el.innerText = detailsText);
+      document.querySelectorAll('.bind-map').forEach(el => el.innerText = mapText);
+    }
+
+    // Export active template to PDF
+    function generatePDF() {
+      // Find the currently active template
+      const element = document.querySelector('.template-container.active');
+      
+      // Temporarily hide the flashing animation to ensure it captures properly
+      const badge = element.querySelector('.flash-badge');
+      badge.style.animation = 'none';
+
+      // PDF Configuration Options
+      const opt = {
+        margin:       0.5,
+        filename:     'Breaking_News_Alert.pdf',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true },
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+
+      // Generate PDF
+      html2pdf().set(opt).from(element).save().then(() => {
+        // Restore animation after PDF generation
+        badge.style.animation = ''; 
+      });
+    }
+  </script>
+
+</body>
+</html>
