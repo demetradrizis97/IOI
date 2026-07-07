@@ -3,44 +3,88 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Breaking News Templates</title>
+  <title>Breaking News Generator</title>
+  <!-- Load html2pdf library for PDF generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  
   <style>
-    /* Base Styles */
     body {
       font-family: 'Arial', sans-serif;
       background-color: #f0f2f5;
       padding: 20px;
       margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
     
-    .controls {
-      margin-bottom: 30px;
+    /* Input Panel Styles */
+    .editor-panel {
       background: white;
-      padding: 15px;
+      padding: 20px;
       border-radius: 8px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     
-    select {
-      padding: 8px 12px;
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    
+    input[type="text"], textarea, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+    
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    
+    .btn-export {
+      background-color: #0056b3;
+      color: white;
+      border: none;
+      padding: 10px 20px;
       font-size: 16px;
       border-radius: 4px;
-      border: 1px solid #ccc;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    
+    .btn-export:hover {
+      background-color: #004494;
     }
 
-    /* Template Container Setup */
-    .template-container {
-      display: none; /* Hidden by default */
-      position: relative; /* Crucial for absolute positioning the FLASH badge */
-      padding: 50px 30px 30px;
+    /* Template Wrapper (Target for PDF) */
+    .preview-panel {
+      background: #e9ecef;
+      padding: 20px;
       border-radius: 8px;
-      color: white;
-      min-height: 250px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+
+    .template-container {
+      display: none;
+      position: relative;
+      padding: 40px;
+      border-radius: 8px;
+      background-color: white;
+      min-height: 400px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
     
     .template-container.active {
-      display: block; /* Show active template */
+      display: block;
     }
 
     /* FLASH Badge */
@@ -55,71 +99,64 @@
       padding: 5px 15px;
       border-radius: 4px;
       letter-spacing: 2px;
-      animation: flash-blink 1.5s infinite;
     }
 
-    @keyframes flash-blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0; }
+    /* Dynamic Content Sections */
+    .content-section {
+      margin-bottom: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 4px;
     }
 
-    /* Placeholder Template Styles */
-    #template1 { background-color: #1a1a1a; border-top: 8px solid #ff0000; }
-    #template2 { background-color: #003366; border-left: 8px solid #ffcc00; }
-    #template3 { background-color: #8b0000; text-align: center; }
+    .content-section h3 { margin-top: 0; font-size: 1.1rem; border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 5px;}
+
+    /* Template Specific Styles */
+    #template1 { background-color: #1a1a1a; color: white; border-top: 10px solid #ff0000; }
+    #template2 { background-color: #f4f4f4; color: #333; border-left: 10px solid #0056b3; }
+    #template2 .content-section { background: white; border: 1px solid #ddd; }
+    #template2 .content-section h3 { border-bottom: 1px solid #ddd; }
+    #template3 { background-color: #8b0000; color: white; border: 5px solid #ffcc00; }
     
-    h1 { margin-top: 0; font-size: 2.5rem; text-transform: uppercase; }
+    h1 { margin-top: 0; font-size: 2.5rem; text-transform: uppercase; margin-bottom: 30px;}
   </style>
 </head>
 <body>
 
-  <!-- Controls -->
-  <div class="controls">
-    <label for="templateSelect"><strong>Select News Layout:</strong> </label>
-    <select id="templateSelect" onchange="switchTemplate()">
-      <option value="template1">Layout 1 (Dark Standard)</option>
-      <option value="template2">Layout 2 (Blue Sidebar)</option>
-      <option value="template3">Layout 3 (Crimson Centered)</option>
-    </select>
+  <!-- Input Form Panel -->
+  <div class="editor-panel">
+    <h2>News Input Panel</h2>
+    
+    <div class="form-group">
+      <label for="templateSelect">Select Layout:</label>
+      <select id="templateSelect" onchange="switchTemplate()">
+        <option value="template1">Layout 1 (Dark Theme)</option>
+        <option value="template2">Layout 2 (Light & Blue Theme)</option>
+        <option value="template3">Layout 3 (Crimson Alert Theme)</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="inputSummary">Summary Headline:</label>
+      <input type="text" id="inputSummary" placeholder="Enter brief summary or headline..." oninput="updateContent()">
+    </div>
+
+    <div class="form-group">
+      <label for="inputDetails">Key Details:</label>
+      <textarea id="inputDetails" placeholder="List the core facts here..." oninput="updateContent()"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="inputMap">Map / Location Info:</label>
+      <textarea id="inputMap" placeholder="Enter location details, coordinates, or map link..." oninput="updateContent()"></textarea>
+    </div>
+
+    <button class="btn-export" onclick="generatePDF()">Export to PDF</button>
   </div>
 
-  <!-- Template 1 -->
-  <div id="template1" class="template-container active">
-    <div class="flash-badge">FLASH</div>
-    <h1>Breaking News</h1>
-    <p>Placeholder content for layout 1. Provide your custom HTML/CSS for this section.</p>
-  </div>
-
-  <!-- Template 2 -->
-  <div id="template2" class="template-container">
-    <div class="flash-badge">FLASH</div>
-    <h1>Urgent Update</h1>
-    <p>Placeholder content for layout 2. Provide your custom HTML/CSS for this section.</p>
-  </div>
-
-  <!-- Template 3 -->
-  <div id="template3" class="template-container">
-    <div class="flash-badge">FLASH</div>
-    <h1>Critical Alert</h1>
-    <p>Placeholder content for layout 3. Provide your custom HTML/CSS for this section.</p>
-  </div>
-
-  <!-- Logic -->
-  <script>
-    function switchTemplate() {
-      // Get the selected template ID
-      const selectedId = document.getElementById('templateSelect').value;
-      
-      // Hide all templates
-      const templates = document.querySelectorAll('.template-container');
-      templates.forEach(template => {
-        template.classList.remove('active');
-      });
-      
-      // Show the selected template
-      document.getElementById(selectedId).classList.add('active');
-    }
-  </script>
-
-</body>
-</html>
+  <!-- Live Preview Panel -->
+  <div class="preview-panel">
+    <h2>Live Preview</h2>
+    
+    <!-- Template 1 -->
+    <div id="templa
