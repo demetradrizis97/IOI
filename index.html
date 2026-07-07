@@ -3,69 +3,278 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>News Alert Generator</title>
+  <title>Executive News Generator</title>
   
   <style>
-    /* Base Styles */
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f0f2f5; padding: 20px; margin: 0; display: flex; flex-direction: column; gap: 20px; }
+    /* ================================================= */
+    /* BASE LAYOUT STYLES                                */
+    /* ================================================= */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: #f0f2f5;
+      padding: 20px;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
     
-    /* Input Panel */
-    .editor-panel { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-    .form-group { margin-bottom: 15px; }
-    label { display: block; font-weight: bold; margin-bottom: 5px; }
-    input[type="text"], textarea, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-family: inherit; }
-    textarea { resize: vertical; min-height: 80px; }
-    .btn-export { background-color: #0056b3; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 10px; }
-    .btn-export:hover { background-color: #004494; }
+    /* Input Control Panel */
+    .editor-panel {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #333;
+    }
+    
+    input[type="text"], textarea, select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+      font-family: inherit;
+      font-size: 14px;
+    }
+    
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    
+    .btn-export {
+      background-color: #0056b3;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+      transition: background 0.2s ease;
+    }
+    
+    .btn-export:hover {
+      background-color: #004494;
+    }
 
-    /* Preview Panel */
-    .preview-panel { background: #e9ecef; padding: 20px; border-radius: 8px; }
-    .template-container { display: none; background-color: #ffffff; border: 1px solid #e0e0e0; padding: 0; font-size: 14px; }
-    .template-container.active { display: block; }
-    .top-banner { text-align: center; font-size: 0.7rem; color: #555; text-transform: uppercase; letter-spacing: 1px; padding: 6px; background-color: #f3f3f3; border-bottom: 1px solid #e0e0e0;}
-    .content-row { display: flex; gap: 15px; padding: 15px 20px; border-bottom: 1px solid #eee; }
-    .content-body h3 { text-transform: uppercase; font-size: 0.8rem; font-weight: bold; letter-spacing: 0.5px; margin: 0 0 5px 0; }
-    .content-body div { white-space: pre-wrap; font-size: 0.95rem; line-height: 1.5; }
+    /* Live Preview Section */
+    .preview-panel {
+      background: #e9ecef;
+      padding: 20px;
+      border-radius: 8px;
+    }
 
-    /* --- TEMPLATE 1: Red Flash --- */
+    .preview-title {
+      margin-top: 0;
+      color: #333;
+      font-size: 1.2rem;
+      border-bottom: 2px solid #ccc;
+      padding-bottom: 8px;
+      margin-bottom: 15px;
+    }
+
+    /* Template Containers */
+    .template-container {
+      display: none; /* Controlled by switchTemplate() JS */
+      background-color: #ffffff;
+      border: 1px solid #d3d3d3;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      font-size: 14px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .template-container.active {
+      display: block;
+    }
+
+    /* ================================================= */
+    /* SHARED NEWS TEMPLATE COMPONENT STYLES             */
+    /* ================================================= */
+    .top-banner {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      padding: 8px;
+      background-color: #f5f5f5;
+      border-bottom: 1px solid #e0e0e0;
+      font-weight: 600;
+    }
+    
+    .header {
+      color: white;
+      padding: 10px 20px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.85rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .keyword-section {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 20px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .keyword-icon {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .keyword-text {
+      font-size: 1.9rem;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0.5px;
+    }
+
+    .keyword-divider {
+      border-left: 1px solid #ddd;
+      height: 44px;
+    }
+
+    .keyword-title {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .keyword-title h2 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #111111;
+    }
+
+    .keyword-title .bind-timestamp {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #666;
+    }
+
+    .content-row {
+      display: flex;
+      gap: 15px;
+      padding: 20px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .content-icon {
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+      color: white;
+    }
+
+    .content-body {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .content-body h3 {
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      margin: 0;
+      color: #555;
+    }
+
+    .content-body div {
+      white-space: pre-wrap;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: #222;
+    }
+
+    /* ================================================= */
+    /* THEME INDIVIDUAL OVERRIDES                        */
+    /* ================================================= */
+    
+    /* Layout 1 - RED FLASH Overrides */
     #template1 .header { background-color: #c8102e; }
-    #template1 .header, #template1 .content-icon { color: white; }
-    #template1 .keyword-text, #template1 .flash-icon { color: #c8102e; }
+    #template1 .keyword-text { color: #c8102e; }
     #template1 .flash-icon { background-color: #c8102e; color: white; border-radius: 50%; }
     #template1 .content-icon { background-color: #c8102e; border-radius: 50%; }
 
-    /* --- TEMPLATE 2: Orange Alert --- */
+    /* Layout 2 - ORANGE ALERT Overrides */
     #template2 .header { background-color: #e87722; }
-    #template2 .header, #template2 .content-icon { color: white; }
-    #template2 .keyword-text, #template2 .alert-icon { color: #e87722; }
-    #template2 .alert-icon { border: 2px solid #e87722; border-radius: 50%; }
+    #template2 .keyword-text { color: #e87722; }
+    #template2 .alert-icon { border: 2.5px solid #e87722; color: #e87722; border-radius: 50%; width: 39px; height: 39px; }
     #template2 .content-icon { background-color: #e87722; border-radius: 50%; }
    
-    /* --- TEMPLATE 3: Grey Awareness --- */
+    /* Layout 3 - GREY AWARENESS Overrides */
     #template3 .header { background-color: #5a6268; }
-    #template3 .header, #template3 .content-icon { color: white; }
-    #template3 .keyword-text, #template3 .awareness-icon { color: #495057; }
-    #template3 .awareness-icon { border: 2px solid #495057; border-radius: 50%; }
+    #template3 .keyword-text { color: #495057; }
+    #template3 .awareness-icon { border: 2.5px solid #495057; color: #495057; border-radius: 50%; width: 39px; height: 39px; }
     #template3 .content-icon { background-color: #495057; border-radius: 50%; }
-    #template3 .bind-title { color: #003366; } /* Special blue for headline */
+    #template3 .bind-title { color: #003366; } /* Special blue-grey headline style */
 
-    /* Shared Template Structure */
-    .header { padding: 8px 20px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; display: flex; justify-content: space-between; align-items: center; }
-    .keyword-section { display: flex; align-items: center; gap: 15px; padding: 20px; border-bottom: 1px solid #eee; }
-    .keyword-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
-    .keyword-text { font-size: 1.8rem; font-weight: 900; line-height: 1; }
-    .keyword-divider { border-left: 1px solid #ddd; height: 40px; }
-    .keyword-title h2 { margin: 0; font-size: 1.2rem; font-weight: bold; }
-    .keyword-title .bind-timestamp { margin: 0; font-size: 0.9rem; color: #666; }
-    .content-icon { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-
-    /* PRINT STYLES */
+    /* ================================================= */
+    /* PDF EXPORT / PRINT RULES                          */
+    /* ================================================= */
     @media print {
-      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-      body { background-color: white; padding: 0; margin: 0; }
-      .editor-panel, .preview-panel h2, .template-container:not(.active) { display: none !important; }
-      .preview-panel { background: transparent; padding: 0; }
-      .template-container.active { display: block !important; box-shadow: none; border-radius: 0; border: none; min-height: 100vh; margin: 0; }
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      
+      body {
+        background-color: white;
+        padding: 0;
+        margin: 0;
+      }
+      
+      /* Hide all UI elements except the active template preview */
+      .editor-panel, 
+      .preview-panel h2, 
+      .template-container:not(.active) {
+        display: none !important;
+      }
+      
+      .preview-panel {
+        background: transparent;
+        padding: 0;
+      }
+      
+      .template-container.active {
+        display: block !important;
+        box-shadow: none;
+        border: none;
+        max-width: 100%;
+        min-height: 100vh;
+        margin: 0;
+      }
     }
   </style>
 </head>
@@ -73,111 +282,205 @@
 
   <!-- Input Form Panel -->
   <div class="editor-panel">
-    <h2>News Alert Input</h2>
+    <h2>News Alert Editor</h2>
+    
     <div class="form-group">
-      <label for="templateSelect">Select Layout:</label>
+      <label for="templateSelect">Select Document Template Layout:</label>
       <select id="templateSelect" onchange="switchTemplate()">
-        <option value="template1">Layout 1: Red Flash</option>
-        <option value="template2">Layout 2: Orange Alert</option>
-        <option value="template3">Layout 3: Grey Awareness</option>
+        <option value="template1">Layout 1: Red Flash Header (No Top Banner)</option>
+        <option value="template2">Layout 2: Orange Alert Header (With Top Banner)</option>
+        <option value="template3">Layout 3: Grey Awareness Header (With Top Banner & Blue Headline)</option>
       </select>
     </div>
-    <div class="form-group"> <label for="inputTitle">Headline:</label> <input type="text" id="inputTitle" oninput="updateContent()"> </div>
-    <div class="form-group"> <label for="inputSummary">Summary:</label> <textarea id="inputSummary" oninput="updateContent()"></textarea> </div>
-    <div class="form-group"> <label for="inputDetails">Key Details:</label> <textarea id="inputDetails" oninput="updateContent()"></textarea> </div>
-    <div class="form-group"> <label for="inputActions">Potential Actions:</label> <textarea id="inputActions" oninput="updateContent()"></textarea> </div>
+    
+    <div class="form-group">
+      <label for="inputTitle">Headline:</label>
+      <input type="text" id="inputTitle" placeholder="e.g., Missile Launch Detected" oninput="updateContent()">
+    </div>
+    
+    <div class="form-group">
+      <label for="inputSummary">Summary:</label>
+      <textarea id="inputSummary" placeholder="Provide a brief introductory summary..." oninput="updateContent()"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="inputDetails">Key Details:</label>
+      <textarea id="inputDetails" placeholder="List core facts, points, and structural data..." oninput="updateContent()"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="inputActions">Potential Actions:</label>
+      <textarea id="inputActions" placeholder="Outline recommendations or target reactions..." oninput="updateContent()"></textarea>
+    </div>
+
     <button class="btn-export" onclick="window.print()">Export Active Layout to PDF</button>
   </div>
 
   <!-- Live Preview Panel -->
   <div class="preview-panel">
-    <h2>Live Preview</h2>
+    <h2 class="preview-title">Live Preview</h2>
     
-    <!-- TEMPLATE 1 -->
+    <!-- LAYOUT 1: RED FLASH -->
     <div id="template1" class="template-container">
-      <div class="header"> <span>★</span> <span>Executive Information</span> <span>★</span> </div>
+      <div class="header">
+        <span>★</span>
+        <span>Executive Information</span>
+        <span>★</span>
+      </div>
       <div class="keyword-section">
-        <div class="keyword-icon flash-icon">⚡</div> <div class="keyword-text">FLASH</div> <div class="keyword-divider"></div>
-        <div class="keyword-title"> <h2 class="bind-title"></h2> <p class="bind-timestamp"></p> </div>
+        <div class="keyword-icon flash-icon">⚡</div>
+        <div class="keyword-text">FLASH</div>
+        <div class="keyword-divider"></div>
+        <div class="keyword-title">
+          <h2 class="bind-title"></h2>
+          <p class="bind-timestamp"></p>
+        </div>
       </div>
       <div class="content-row">
         <div class="content-icon">📄</div>
-        <div class="content-body"> <h3>Summary</h3> <div class="bind-summary"></div> </div>
+        <div class="content-body">
+          <h3>Summary</h3>
+          <div class="bind-summary"></div>
+        </div>
       </div>
       <div class="content-row">
         <div class="content-icon">🎯</div>
-        <div class="content-body"> <h3>Key Details</h3> <div class="bind-details"></div> </div>
+        <div class="content-body">
+          <h3>Key Details</h3>
+          <div class="bind-details"></div>
+        </div>
       </div>
       <div class="content-row" style="border-bottom: none;">
         <div class="content-icon">📋</div>
-        <div class="content-body"> <h3>Potential Actions</h3> <div class="bind-actions"></div> </div>
+        <div class="content-body">
+          <h3>Potential Actions</h3>
+          <div class="bind-actions"></div>
+        </div>
       </div>
     </div>
 
-    <!-- TEMPLATE 2 -->
+    <!-- LAYOUT 2: ORANGE ALERT -->
     <div id="template2" class="template-container">
       <div class="top-banner">Item of Interest</div>
-      <div class="header"> <span>★</span> <span>Executive Information</span> <span>★</span> </div>
+      <div class="header">
+        <span>★</span>
+        <span>Executive Information</span>
+        <span>★</span>
+      </div>
       <div class="keyword-section">
-        <div class="keyword-icon alert-icon">⚠️</div> <div class="keyword-text">ALERT</div> <div class="keyword-divider"></div>
-        <div class="keyword-title"> <h2 class="bind-title"></h2> <p class="bind-timestamp"></p> </div>
+        <div class="keyword-icon alert-icon">⚠️</div>
+        <div class="keyword-text">ALERT</div>
+        <div class="keyword-divider"></div>
+        <div class="keyword-title">
+          <h2 class="bind-title"></h2>
+          <p class="bind-timestamp"></p>
+        </div>
       </div>
       <div class="content-row">
         <div class="content-icon">📄</div>
-        <div class="content-body"> <h3>Summary</h3> <div class="bind-summary"></div> </div>
+        <div class="content-body">
+          <h3>Summary</h3>
+          <div class="bind-summary"></div>
+        </div>
       </div>
       <div class="content-row">
         <div class="content-icon">🎯</div>
-        <div class="content-body"> <h3>Key Details</h3> <div class="bind-details"></div> </div>
+        <div class="content-body">
+          <h3>Key Details</h3>
+          <div class="bind-details"></div>
+        </div>
       </div>
       <div class="content-row" style="border-bottom: none;">
         <div class="content-icon">📋</div>
-        <div class="content-body"> <h3>Potential Actions</h3> <div class="bind-actions"></div> </div>
+        <div class="content-body">
+          <h3>Potential Actions</h3>
+          <div class="bind-actions"></div>
+        </div>
       </div>
     </div>
 
-    <!-- TEMPLATE 3 -->
+    <!-- LAYOUT 3: GREY AWARENESS -->
     <div id="template3" class="template-container">
       <div class="top-banner">Item of Interest</div>
-      <div class="header"> <span>★</span> <span>Executive Information</span> <span>★</span> </div>
+      <div class="header">
+        <span>★</span>
+        <span>Executive Information</span>
+        <span>★</span>
+      </div>
       <div class="keyword-section">
-        <div class="keyword-icon awareness-icon">ⓘ</div> <div class="keyword-text">AWARENESS</div> <div class="keyword-divider"></div>
-        <div class="keyword-title"> <h2 class="bind-title"></h2> <p class="bind-timestamp"></p> </div>
+        <div class="keyword-icon awareness-icon">ⓘ</div>
+        <div class="keyword-text">AWARENESS</div>
+        <div class="keyword-divider"></div>
+        <div class="keyword-title">
+          <h2 class="bind-title"></h2>
+          <p class="bind-timestamp"></p>
+        </div>
       </div>
       <div class="content-row">
         <div class="content-icon">📄</div>
-        <div class="content-body"> <h3>Summary</h3> <div class="bind-summary"></div> </div>
+        <div class="content-body">
+          <h3>Summary</h3>
+          <div class="bind-summary"></div>
+        </div>
       </div>
       <div class="content-row">
         <div class="content-icon">🎯</div>
-        <div class="content-body"> <h3>Key Details</h3> <div class="bind-details"></div> </div>
+        <div class="content-body">
+          <h3>Key Details</h3>
+          <div class="bind-details"></div>
+        </div>
       </div>
       <div class="content-row" style="border-bottom: none;">
         <div class="content-icon">📋</div>
-        <div class="content-body"> <h3>Potential Actions</h3> <div class="bind-actions"></div> </div>
+        <div class="content-body">
+          <h3>Potential Actions</h3>
+          <div class="bind-actions"></div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Logic -->
+  <!-- Javascript Core Logic -->
   <script>
     function switchTemplate() {
       const selectedId = document.getElementById('templateSelect').value;
+      
+      // Hide all layouts
       document.querySelectorAll('.template-container').forEach(t => t.classList.remove('active'));
+      
+      // Display the chosen layout
       document.getElementById(selectedId).classList.add('active');
       updateContent(); 
     }
 
     function updateContent() {
-      const defaults = { title: 'Awaiting Headline...', summary: 'Awaiting input...', details: 'Awaiting input...', actions: 'Awaiting input...' };
+      // Define Fallbacks
+      const defaults = { 
+        title: 'Awaiting Headline...', 
+        summary: 'Awaiting input...', 
+        details: 'Awaiting input...', 
+        actions: 'Awaiting input...' 
+      };
+      
+      // Grab Current Values
       const titleText = document.getElementById('inputTitle').value || defaults.title;
       const summaryText = document.getElementById('inputSummary').value || defaults.summary;
       const detailsText = document.getElementById('inputDetails').value || defaults.details;
       const actionsText = document.getElementById('inputActions').value || defaults.actions;
       
+      // Build Time Stamp format
       const now = new Date();
-      const timestamp = now.toLocaleString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' });
+      const timestamp = now.toLocaleString('en-US', { 
+        weekday: 'long', 
+        month: 'long', 
+        day: 'numeric', 
+        year: 'numeric', 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        timeZoneName: 'short' 
+      });
       
+      // Bind data to all elements matching template classes
       document.querySelectorAll('.bind-title').forEach(el => el.innerText = titleText);
       document.querySelectorAll('.bind-summary').forEach(el => el.innerText = summaryText);
       document.querySelectorAll('.bind-details').forEach(el => el.innerText = detailsText);
@@ -185,6 +488,7 @@
       document.querySelectorAll('.bind-timestamp').forEach(el => el.innerText = timestamp);
     }
     
+    // Boot Initialization
     window.onload = () => {
         switchTemplate();
     };
