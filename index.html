@@ -1,292 +1,230 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Executive News Generator</title>
-  
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>API Test Client</title>
   <style>
-    /* ================================================= */
-    /* BASE LAYOUT STYLES                                */
-    /* ================================================= */
+    :root {
+      font-family: system-ui, sans-serif;
+      color: #e6edf3;
+      background: #0d1117;
+    }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: #f0f2f5;
-      padding: 20px;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-    
-    .editor-panel {
-      background: #ffffff;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    
-    .form-group { margin-bottom: 15px; }
-    label { display: block; font-weight: bold; margin-bottom: 5px; color: #333; }
-    
-    input[type="text"], input[type="file"], textarea, select {
-      width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-family: inherit; font-size: 14px;
-    }
-    input[type="file"] { background: #f9f9f9; cursor: pointer; }
-    textarea { resize: vertical; min-height: 80px; }
-    
-    .btn-export {
-      background-color: #0056b3; color: white; border: none; padding: 12px 24px; font-size: 16px; border-radius: 4px; cursor: pointer; font-weight: bold; margin-top: 10px; transition: background 0.2s ease;
-    }
-    .btn-export:hover { background-color: #004494; }
-
-    .preview-panel { background: #e9ecef; padding: 20px; border-radius: 8px; }
-    .preview-title { margin-top: 0; color: #333; font-size: 1.2rem; border-bottom: 2px solid #ccc; padding-bottom: 8px; margin-bottom: 15px; }
-
-    .template-container {
-      display: none; background-color: #ffffff; border: 1px solid #d3d3d3; box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-size: 14px; max-width: 800px; margin: 0 auto;
-    }
-    .template-container.active { display: block; }
-
-    /* ================================================= */
-    /* SHARED NEWS TEMPLATE COMPONENT STYLES             */
-    /* ================================================= */
-    .top-banner {
-      text-align: center; font-size: 0.75rem; color: #555; text-transform: uppercase; letter-spacing: 1.5px; padding: 8px; background-color: #f5f5f5; border-bottom: 1px solid #e0e0e0; font-weight: 600;
-    }
-    
-    .header {
-      color: white; padding: 10px 20px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85rem; display: flex; justify-content: space-between; align-items: center;
+      max-width: 960px;
+      margin: 2rem auto;
+      padding: 0 1rem;
     }
 
-    .keyword-section { display: flex; align-items: center; gap: 20px; padding: 20px; border-bottom: 1px solid #eee; }
-    .keyword-icon { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .keyword-text { font-size: 1.9rem; font-weight: 900; line-height: 1; letter-spacing: 0.5px; }
-    .keyword-divider { border-left: 1px solid #ddd; height: 44px; }
-    
-    .keyword-title { display: flex; flex-direction: column; gap: 4px; }
-    .keyword-title h2 { margin: 0; font-size: 1.25rem; font-weight: 700; color: #111111; }
-    .keyword-title .bind-timestamp { margin: 0; font-size: 0.85rem; color: #666; }
+    h1 { margin-bottom: 0.25rem; }
+    .note { color: #9da7b3; }
 
-    .content-row { display: flex; gap: 15px; padding: 20px; border-bottom: 1px solid #f0f0f0; }
-    .content-icon { width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .content-icon-spacer { width: 34px; flex-shrink: 0; } /* Aligns image with text */
-    
-    .content-body { display: flex; flex-direction: column; gap: 4px; width: 100%; }
-    .content-body h3 { text-transform: uppercase; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.8px; margin: 0; color: #555; }
-    .content-body div { white-space: pre-wrap; font-size: 0.95rem; line-height: 1.5; color: #222; }
-
-    /* Image specific styles - UPDATED TO FILL BOX */
-    .image-row { display: none; padding-top: 15px; padding-bottom: 5px; border-bottom: none; }
-    .bind-image { 
-      width: 100%; 
-      height: auto;
-      max-height: 450px; 
-      object-fit: cover; 
-      object-position: center;
-      border-radius: 4px; 
-      border: 1px solid #e0e0e0; 
+    label {
       display: block;
+      margin-top: 1rem;
+      font-weight: 700;
     }
 
-    /* ================================================= */
-    /* THEME SOLID CIRCLE OVERRIDES                      */
-    /* ================================================= */
-    #template1 .header { background-color: #c8102e; }
-    #template1 .keyword-text { color: #c8102e; }
-    #template1 .flash-icon, #template1 .content-icon { background-color: #c8102e; border-radius: 50%; }
+    input, select, textarea, button {
+      box-sizing: border-box;
+      width: 100%;
+      margin-top: 0.35rem;
+      padding: 0.7rem;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      color: #e6edf3;
+      background: #161b22;
+      font: inherit;
+    }
 
-    #template2 .header { background-color: #e87722; }
-    #template2 .keyword-text { color: #e87722; }
-    #template2 .alert-icon, #template2 .content-icon { background-color: #e87722; border-radius: 50%; }
-   
-    #template3 .header { background-color: #5a6268; }
-    #template3 .keyword-text { color: #5a6268; }
-    #template3 .awareness-icon, #template3 .content-icon { background-color: #5a6268; border-radius: 50%; }
-    #template3 .bind-title { color: #003366; } 
+    textarea {
+      min-height: 180px;
+      resize: vertical;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
 
-    /* ================================================= */
-    /* PDF EXPORT / PRINT RULES                          */
-    /* ================================================= */
-    @media print {
-      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-      body { background-color: white; padding: 0; margin: 0; }
-      .editor-panel, .preview-panel h2, .template-container:not(.active) { display: none !important; }
-      .preview-panel { background: transparent; padding: 0; }
-      .template-container.active { display: block !important; box-shadow: none; border: none; max-width: 100%; min-height: 100vh; margin: 0; }
-      .bind-image { max-height: 400px; } /* Ensures image doesn't force a page break awkwardly */
+    button {
+      margin-top: 1rem;
+      cursor: pointer;
+      border: 0;
+      font-weight: 700;
+      background: #238636;
+    }
+
+    button:hover { background: #2ea043; }
+    button:disabled { opacity: 0.65; cursor: wait; }
+
+    #status {
+      margin-top: 1rem;
+      padding: 0.75rem;
+      border-radius: 6px;
+      background: #161b22;
+      white-space: pre-wrap;
+    }
+
+    pre {
+      overflow: auto;
+      padding: 1rem;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      background: #161b22;
+    }
+
+    .warning {
+      border-left: 4px solid #d29922;
+      padding-left: 0.75rem;
+      color: #f2cc60;
     }
   </style>
 </head>
 <body>
+  <h1>API Test Client</h1>
 
-  <!-- Input Form Panel -->
-  <div class="editor-panel">
-    <h2>News Alert Editor</h2>
-    <div class="form-group">
-      <label for="templateSelect">Select Document Template Layout:</label>
-      <select id="templateSelect" onchange="switchTemplate()">
-        <option value="template1">Layout 1: Red Flash Header</option>
-        <option value="template2">Layout 2: Orange Alert Header</option>
-        <option value="template3">Layout 3: Grey Awareness Header</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="inputTitle">Headline:</label>
-      <input type="text" id="inputTitle" placeholder="e.g., Missile Launch Detected" oninput="updateContent()">
-    </div>
-    
-    <div class="form-group">
-      <label for="inputImage">Attach Image (Optional):</label>
-      <input type="file" id="inputImage" accept="image/*" onchange="loadImage(event)">
-    </div>
+  <p class="note">
+    The bearer token stays only in this browser tab while the page is open.
+    It is not saved to localStorage, cookies, or the Git repository.
+  </p>
 
-    <div class="form-group">
-      <label for="inputSummary">Summary:</label>
-      <textarea id="inputSummary" placeholder="Provide a brief introductory summary..." oninput="updateContent()"></textarea>
-    </div>
-    <div class="form-group">
-      <label for="inputDetails">Key Details:</label>
-      <textarea id="inputDetails" placeholder="List core facts, points, and structural data..." oninput="updateContent()"></textarea>
-    </div>
-    <div class="form-group">
-      <label for="inputActions">Potential Actions:</label>
-      <textarea id="inputActions" placeholder="Outline recommendations or target reactions..." oninput="updateContent()"></textarea>
-    </div>
-    <button class="btn-export" onclick="window.print()">Export Active Layout to PDF</button>
-  </div>
+  <p class="warning">
+    Do not place an API key in this HTML file, JavaScript file, GitLab CI variable
+    rendered into the page, or any public GitLab Pages build artifact.
+  </p>
 
-  <!-- Live Preview Panel -->
-  <div class="preview-panel">
-    <h2 class="preview-title">Live Preview</h2>
-    
-    <!-- LAYOUT 1: RED FLASH -->
-    <div id="template1" class="template-container">
-      <div class="header"> <span>★</span> <span>Executive Information</span> <span>★</span> </div>
-      <div class="keyword-section">
-        <div class="keyword-icon flash-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M7 2v11h3v9l7-12h-4l4-8z"/></svg>
-        </div>
-        <div class="keyword-text">FLASH</div>
-        <div class="keyword-divider"></div>
-        <div class="keyword-title"> <h2 class="bind-title"></h2> <p class="bind-timestamp"></p> </div>
-      </div>
-      <div class="injected-content"></div>
-    </div>
+  <label for="baseUrl">API base URL</label>
+  <input
+    id="baseUrl"
+    type="url"
+    placeholder="https://your-api-provider.example/api"
+    autocomplete="off"
+  />
 
-    <!-- LAYOUT 2: ORANGE ALERT -->
-    <div id="template2" class="template-container">
-      <div class="top-banner">Item of Interest</div>
-      <div class="header"> <span>★</span> <span>Executive Information</span> <span>★</span> </div>
-      <div class="keyword-section">
-        <div class="keyword-icon alert-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
-        </div>
-        <div class="keyword-text">ALERT</div>
-        <div class="keyword-divider"></div>
-        <div class="keyword-title"> <h2 class="bind-title"></h2> <p class="bind-timestamp"></p> </div>
-      </div>
-      <div class="injected-content"></div>
-    </div>
+  <label for="token">Bearer token / API key</label>
+  <input
+    id="token"
+    type="password"
+    placeholder="Paste JWT or oat_... API key"
+    autocomplete="off"
+  />
 
-    <!-- LAYOUT 3: GREY AWARENESS -->
-    <div id="template3" class="template-container">
-      <div class="top-banner">Item of Interest</div>
-      <div class="header"> <span>★</span> <span>Executive Information</span> <span>★</span> </div>
-      <div class="keyword-section">
-        <div class="keyword-icon awareness-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-        </div>
-        <div class="keyword-text">AWARENESS</div>
-        <div class="keyword-divider"></div>
-        <div class="keyword-title"> <h2 class="bind-title"></h2> <p class="bind-timestamp"></p> </div>
-      </div>
-      <div class="injected-content"></div>
-    </div>
-  </div>
+  <label for="method">HTTP method</label>
+  <select id="method">
+    <option value="GET" selected>GET</option>
+    <option value="POST">POST</option>
+    <option value="PUT">PUT</option>
+    <option value="PATCH">PATCH</option>
+    <option value="DELETE">DELETE</option>
+  </select>
 
-  <!-- Javascript Core Logic -->
+  <label for="path">Endpoint path</label>
+  <input
+    id="path"
+    type="text"
+    value="/users/me"
+    placeholder="/users/me"
+    autocomplete="off"
+  />
+
+  <label for="body">JSON request body (POST/PUT/PATCH only)</label>
+  <textarea id="body" spellcheck="false">{
+  "question": "What are the key security risks in this region?",
+  "locations": {
+    "countries": ["US"]
+  },
+  "keywords": "political risk"
+}</textarea>
+
+  <button id="sendButton" type="button">Send request</button>
+
+  <div id="status">Ready.</div>
+
+  <h2>Response</h2>
+  <pre id="response">No request sent.</pre>
+
   <script>
-    // Pure White SVGs for the body content
-    const summarySvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>`;
-    const detailsSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm0-7c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>`;
-    const actionsSvg = `<svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>`;
+    const baseUrlInput = document.getElementById("baseUrl");
+    const tokenInput = document.getElementById("token");
+    const methodInput = document.getElementById("method");
+    const pathInput = document.getElementById("path");
+    const bodyInput = document.getElementById("body");
+    const sendButton = document.getElementById("sendButton");
+    const statusOutput = document.getElementById("status");
+    const responseOutput = document.getElementById("response");
 
-    // Inject content layout with SVGs and the new Image Row
-    const bodyContentHTML = `
-      <div class="content-row image-row">
-        <div class="content-icon-spacer"></div>
-        <div class="content-body">
-          <img class="bind-image" src="" alt="Attached Context Image">
-        </div>
-      </div>
-      <div class="content-row">
-        <div class="content-icon">${summarySvg}</div>
-        <div class="content-body"> <h3>Summary</h3> <div class="bind-summary"></div> </div>
-      </div>
-      <div class="content-row">
-        <div class="content-icon">${detailsSvg}</div>
-        <div class="content-body"> <h3>Key Details</h3> <div class="bind-details"></div> </div>
-      </div>
-      <div class="content-row" style="border-bottom: none;">
-        <div class="content-icon">${actionsSvg}</div>
-        <div class="content-body"> <h3>Potential Actions</h3> <div class="bind-actions"></div> </div>
-      </div>
-    `;
-
-    document.querySelectorAll('.injected-content').forEach(el => el.innerHTML = bodyContentHTML);
-
-    // Template Switching Logic
-    function switchTemplate() {
-      const selectedId = document.getElementById('templateSelect').value;
-      document.querySelectorAll('.template-container').forEach(t => t.classList.remove('active'));
-      document.getElementById(selectedId).classList.add('active');
-      updateContent(); 
-    }
-
-    // Text Content Update Logic
-    function updateContent() {
-      const defaults = { title: 'Awaiting Headline...', summary: 'Awaiting input...', details: 'Awaiting input...', actions: 'Awaiting input...' };
-      
-      const titleText = document.getElementById('inputTitle').value || defaults.title;
-      const summaryText = document.getElementById('inputSummary').value || defaults.summary;
-      const detailsText = document.getElementById('inputDetails').value || defaults.details;
-      const actionsText = document.getElementById('inputActions').value || defaults.actions;
-      
-      const now = new Date();
-      const timestamp = now.toLocaleString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' });
-      
-      document.querySelectorAll('.bind-title').forEach(el => el.innerText = titleText);
-      document.querySelectorAll('.bind-summary').forEach(el => el.innerText = summaryText);
-      document.querySelectorAll('.bind-details').forEach(el => el.innerText = detailsText);
-      document.querySelectorAll('.bind-actions').forEach(el => el.innerText = actionsText);
-      document.querySelectorAll('.bind-timestamp').forEach(el => el.innerText = timestamp);
-    }
-
-    // Image Upload Logic
-    function loadImage(event) {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const dataUrl = e.target.result;
-          document.querySelectorAll('.bind-image').forEach(img => {
-            img.src = dataUrl;
-          });
-          document.querySelectorAll('.image-row').forEach(row => {
-            row.style.display = 'flex'; 
-          });
-        }
-        reader.readAsDataURL(file);
-      } else {
-        document.querySelectorAll('.image-row').forEach(row => {
-          row.style.display = 'none';
-        });
+    function formatResponse(text) {
+      try {
+        return JSON.stringify(JSON.parse(text), null, 2);
+      } catch {
+        return text || "(No response body)";
       }
     }
-    
-    window.onload = () => { switchTemplate(); };
-  </script>
 
+    sendButton.addEventListener("click", async () => {
+      const baseUrl = baseUrlInput.value.trim().replace(/\/+$/, "");
+      const token = tokenInput.value.trim();
+      const method = methodInput.value;
+      const path = pathInput.value.trim().startsWith("/")
+        ? pathInput.value.trim()
+        : `/${pathInput.value.trim()}`;
+
+      if (!baseUrl) {
+        statusOutput.textContent = "Enter the API base URL.";
+        return;
+      }
+
+      if (!token) {
+        statusOutput.textContent = "Enter a Bearer token or oat_ API key.";
+        return;
+      }
+
+      let requestBody;
+      if (!["GET", "DELETE"].includes(method)) {
+        const rawBody = bodyInput.value.trim();
+
+        if (rawBody) {
+          try {
+            requestBody = JSON.stringify(JSON.parse(rawBody));
+          } catch (error) {
+            statusOutput.textContent = `Invalid JSON body: ${error.message}`;
+            return;
+          }
+        }
+      }
+
+      const url = `${baseUrl}${path}`;
+      sendButton.disabled = true;
+      statusOutput.textContent = `Sending ${method} ${url} ...`;
+      responseOutput.textContent = "";
+
+      try {
+        const response = await fetch(url, {
+          method,
+          mode: "cors",
+          headers: {
+            "Accept": "application/json",
+            "Authorization": `Bearer ${token}`,
+            ...(requestBody ? { "Content-Type": "application/json" } : {})
+          },
+          ...(requestBody ? { body: requestBody } : {})
+        });
+
+        const text = await response.text();
+
+        statusOutput.textContent =
+          `${response.ok ? "Success" : "Request failed"}: ` +
+          `${response.status} ${response.statusText}`;
+
+        responseOutput.textContent = formatResponse(text);
+      } catch (error) {
+        statusOutput.textContent =
+          `Browser/network error: ${error.message}\n\n` +
+          `If this mentions CORS, the API must allow your GitLab Pages origin, ` +
+          `or you need a server-side proxy.`;
+        responseOutput.textContent = "";
+      } finally {
+        sendButton.disabled = false;
+      }
+    });
+  </script>
 </body>
 </html>
