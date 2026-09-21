@@ -3,22 +3,39 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>API Test Client</title>
+  <title>Seerist API Client</title>
+
   <style>
     :root {
-      font-family: system-ui, sans-serif;
-      color: #e6edf3;
+      color-scheme: dark;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: #0d1117;
+      color: #e6edf3;
     }
 
     body {
-      max-width: 960px;
+      max-width: 1000px;
       margin: 2rem auto;
-      padding: 0 1rem;
+      padding: 0 1rem 3rem;
     }
 
-    h1 { margin-bottom: 0.25rem; }
-    .note { color: #9da7b3; }
+    h1, h2 {
+      margin-bottom: 0.4rem;
+    }
+
+    .note {
+      color: #9da7b3;
+      line-height: 1.5;
+    }
+
+    .warning {
+      margin: 1rem 0;
+      padding: 0.8rem 1rem;
+      border-left: 4px solid #d29922;
+      background: #161b22;
+      color: #f2cc60;
+      line-height: 1.5;
+    }
 
     label {
       display: block;
@@ -33,69 +50,86 @@
       padding: 0.7rem;
       border: 1px solid #30363d;
       border-radius: 6px;
-      color: #e6edf3;
       background: #161b22;
+      color: #e6edf3;
       font: inherit;
     }
 
     textarea {
-      min-height: 180px;
+      min-height: 150px;
       resize: vertical;
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
     }
 
     button {
       margin-top: 1rem;
       cursor: pointer;
       border: 0;
-      font-weight: 700;
       background: #238636;
+      font-weight: 700;
     }
 
-    button:hover { background: #2ea043; }
-    button:disabled { opacity: 0.65; cursor: wait; }
+    button:hover {
+      background: #2ea043;
+    }
+
+    button.secondary {
+      background: #1f6feb;
+    }
+
+    button.secondary:hover {
+      background: #388bfd;
+    }
+
+    button:disabled {
+      cursor: wait;
+      opacity: 0.65;
+    }
 
     #status {
       margin-top: 1rem;
-      padding: 0.75rem;
+      padding: 0.85rem;
       border-radius: 6px;
       background: #161b22;
       white-space: pre-wrap;
     }
 
     pre {
+      min-height: 200px;
       overflow: auto;
       padding: 1rem;
       border: 1px solid #30363d;
       border-radius: 6px;
       background: #161b22;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
     }
 
-    .warning {
-      border-left: 4px solid #d29922;
-      padding-left: 0.75rem;
-      color: #f2cc60;
+    code {
+      color: #79c0ff;
     }
   </style>
 </head>
+
 <body>
-  <h1>API Test Client</h1>
+  <h1>Seerist API Client</h1>
 
   <p class="note">
-    The bearer token stays only in this browser tab while the page is open.
-    It is not saved to localStorage, cookies, or the Git repository.
+    Your bearer token is used only for requests from the current browser tab.
+    This page does not save it in local storage, cookies, or the GitHub repository.
   </p>
 
-  <p class="warning">
-    Do not place an API key in this HTML file, JavaScript file, GitLab CI variable
-    rendered into the page, or any public GitLab Pages build artifact.
-  </p>
+  <div class="warning">
+    Do not commit an API key or bearer token to GitHub. Enter it only at runtime
+    in the field below.
+  </div>
 
   <label for="baseUrl">API base URL</label>
   <input
     id="baseUrl"
     type="url"
-    placeholder="https://your-api-provider.example/api"
+    value="https://api.platform.seerist.com"
+    placeholder="https://api.platform.seerist.com"
     autocomplete="off"
   />
 
@@ -106,6 +140,8 @@
     placeholder="Paste JWT or oat_... API key"
     autocomplete="off"
   />
+
+  <h2>General API Request</h2>
 
   <label for="method">HTTP method</label>
   <select id="method">
@@ -125,16 +161,21 @@
     autocomplete="off"
   />
 
-  <label for="body">JSON request body (POST/PUT/PATCH only)</label>
-  <textarea id="body" spellcheck="false">{
-  "question": "What are the key security risks in this region?",
-  "locations": {
-    "countries": ["US"]
-  },
-  "keywords": "political risk"
-}</textarea>
+  <label for="body">JSON request body — POST, PUT, or PATCH only</label>
+  <textarea id="body" spellcheck="false"></textarea>
 
-  <button id="sendButton" type="button">Send request</button>
+  <button id="sendButton" type="button">Send Request</button>
+
+  <h2>VZLA Folder Full Text</h2>
+
+  <p class="note">
+    This button retrieves all items in the VZLA folder, then retrieves each
+    article's complete content record. It may make more than one API call.
+  </p>
+
+  <button id="loadVzlaButton" class="secondary" type="button">
+    Load VZLA Folder Full Text
+  </button>
 
   <div id="status">Ready.</div>
 
@@ -142,30 +183,152 @@
   <pre id="response">No request sent.</pre>
 
   <script>
+    // VZLA folder ID obtained from GET /folders.
+    const VZLA_FOLDER_ID = "3e639ebc-58ae-45bf-87b0-2d0542cae323";
+
     const baseUrlInput = document.getElementById("baseUrl");
     const tokenInput = document.getElementById("token");
     const methodInput = document.getElementById("method");
     const pathInput = document.getElementById("path");
     const bodyInput = document.getElementById("body");
+
     const sendButton = document.getElementById("sendButton");
+    const loadVzlaButton = document.getElementById("loadVzlaButton");
+
     const statusOutput = document.getElementById("status");
     const responseOutput = document.getElementById("response");
 
-    function formatResponse(text) {
-      try {
-        return JSON.stringify(JSON.parse(text), null, 2);
-      } catch {
-        return text || "(No response body)";
+    function getBaseUrl() {
+      return baseUrlInput.value.trim().replace(/\/+$/, "");
+    }
+
+    function getToken() {
+      return tokenInput.value.trim();
+    }
+
+    function buildUrl(baseUrl, path) {
+      const normalizedPath = path.trim().startsWith("/")
+        ? path.trim()
+        : `/${path.trim()}`;
+
+      return `${baseUrl}${normalizedPath}`;
+    }
+
+    function formatResponse(value) {
+      if (typeof value === "string") {
+        try {
+          return JSON.stringify(JSON.parse(value), null, 2);
+        } catch {
+          return value || "(No response body)";
+        }
       }
+
+      return JSON.stringify(value, null, 2);
+    }
+
+    function htmlToText(html) {
+      const parsed = new DOMParser().parseFromString(
+        html || "",
+        "text/html"
+      );
+
+      return parsed.body.textContent.replace(/\s+/g, " ").trim();
+    }
+
+    async function apiRequest(url, token, options = {}) {
+      const response = await fetch(url, {
+        mode: "cors",
+        ...options,
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+          ...(options.headers || {})
+        }
+      });
+
+      const text = await response.text();
+
+      let data;
+      try {
+        data = text ? JSON.parse(text) : null;
+      } catch {
+        data = text;
+      }
+
+      if (!response.ok) {
+        const detail =
+          typeof data === "string"
+            ? data
+            : JSON.stringify(data);
+
+        throw new Error(
+          `${response.status} ${response.statusText}${
+            detail ? `: ${detail}` : ""
+          }`
+        );
+      }
+
+      return data;
+    }
+
+    async function getAllFolderItems(baseUrl, token, folderId) {
+      const allItems = [];
+      const perPage = 100;
+      let page = 1;
+      let hasMore = true;
+
+      while (hasMore) {
+        const url = buildUrl(
+          baseUrl,
+          `/folders/${encodeURIComponent(folderId)}/items` +
+          `?page=${page}&perPage=${perPage}&includeContent=true`
+        );
+
+        const result = await apiRequest(url, token, {
+          method: "GET"
+        });
+
+        allItems.push(...(result.items || []));
+        hasMore = Boolean(result.pagination?.hasMore);
+        page += 1;
+      }
+
+      return allItems;
+    }
+
+    async function mapWithConcurrency(items, limit, worker) {
+      const results = new Array(items.length);
+      let nextIndex = 0;
+
+      async function workerLoop() {
+        while (true) {
+          const currentIndex = nextIndex;
+          nextIndex += 1;
+
+          if (currentIndex >= items.length) {
+            return;
+          }
+
+          results[currentIndex] = await worker(
+            items[currentIndex],
+            currentIndex
+          );
+        }
+      }
+
+      const workerCount = Math.min(limit, items.length);
+      await Promise.all(
+        Array.from({ length: workerCount }, () => workerLoop())
+      );
+
+      return results;
     }
 
     sendButton.addEventListener("click", async () => {
-      const baseUrl = baseUrlInput.value.trim().replace(/\/+$/, "");
-      const token = tokenInput.value.trim();
+      const baseUrl = getBaseUrl();
+      const token = getToken();
       const method = methodInput.value;
-      const path = pathInput.value.trim().startsWith("/")
-        ? pathInput.value.trim()
-        : `/${pathInput.value.trim()}`;
+      const path = pathInput.value.trim();
 
       if (!baseUrl) {
         statusOutput.textContent = "Enter the API base URL.";
@@ -173,11 +336,17 @@
       }
 
       if (!token) {
-        statusOutput.textContent = "Enter a Bearer token or oat_ API key.";
+        statusOutput.textContent = "Enter a Bearer token or API key.";
+        return;
+      }
+
+      if (!path) {
+        statusOutput.textContent = "Enter an endpoint path.";
         return;
       }
 
       let requestBody;
+
       if (!["GET", "DELETE"].includes(method)) {
         const rawBody = bodyInput.value.trim();
 
@@ -185,44 +354,149 @@
           try {
             requestBody = JSON.stringify(JSON.parse(rawBody));
           } catch (error) {
-            statusOutput.textContent = `Invalid JSON body: ${error.message}`;
+            statusOutput.textContent =
+              `Invalid JSON request body: ${error.message}`;
             return;
           }
         }
       }
 
-      const url = `${baseUrl}${path}`;
+      const url = buildUrl(baseUrl, path);
+
       sendButton.disabled = true;
       statusOutput.textContent = `Sending ${method} ${url} ...`;
       responseOutput.textContent = "";
 
       try {
-        const response = await fetch(url, {
+        const result = await apiRequest(url, token, {
           method,
-          mode: "cors",
-          headers: {
-            "Accept": "application/json",
-            "Authorization": `Bearer ${token}`,
-            ...(requestBody ? { "Content-Type": "application/json" } : {})
-          },
+          headers: requestBody
+            ? { "Content-Type": "application/json" }
+            : {},
           ...(requestBody ? { body: requestBody } : {})
         });
 
-        const text = await response.text();
-
-        statusOutput.textContent =
-          `${response.ok ? "Success" : "Request failed"}: ` +
-          `${response.status} ${response.statusText}`;
-
-        responseOutput.textContent = formatResponse(text);
+        statusOutput.textContent = "Success.";
+        responseOutput.textContent = formatResponse(result);
       } catch (error) {
-        statusOutput.textContent =
-          `Browser/network error: ${error.message}\n\n` +
-          `If this mentions CORS, the API must allow your GitLab Pages origin, ` +
-          `or you need a server-side proxy.`;
-        responseOutput.textContent = "";
+        statusOutput.textContent = `Request failed: ${error.message}`;
       } finally {
         sendButton.disabled = false;
+      }
+    });
+
+    loadVzlaButton.addEventListener("click", async () => {
+      const baseUrl = getBaseUrl();
+      const token = getToken();
+
+      if (!baseUrl) {
+        statusOutput.textContent = "Enter the API base URL.";
+        return;
+      }
+
+      if (!token) {
+        statusOutput.textContent = "Enter a Bearer token or API key.";
+        return;
+      }
+
+      loadVzlaButton.disabled = true;
+      responseOutput.textContent = "";
+      statusOutput.textContent = "Loading VZLA folder items...";
+
+      try {
+        const folderItems = await getAllFolderItems(
+          baseUrl,
+          token,
+          VZLA_FOLDER_ID
+        );
+
+        const contentIds = [
+          ...new Set(
+            folderItems
+              .map(item => item.contentId)
+              .filter(Boolean)
+          )
+        ];
+
+        if (contentIds.length === 0) {
+          statusOutput.textContent =
+            "The VZLA folder contains no accessible content items.";
+
+          responseOutput.textContent = JSON.stringify(
+            {
+              folderId: VZLA_FOLDER_ID,
+              articles: []
+            },
+            null,
+            2
+          );
+
+          return;
+        }
+
+        statusOutput.textContent =
+          `Loading full text for ${contentIds.length} article(s)...`;
+
+        // Five concurrent requests limits browser/API load while remaining fast.
+        const articles = await mapWithConcurrency(
+          contentIds,
+          5,
+          async (contentId, index) => {
+            statusOutput.textContent =
+              `Loading full text: ${index + 1} of ${contentIds.length}...`;
+
+            try {
+              const articleUrl = buildUrl(
+                baseUrl,
+                `/content/${encodeURIComponent(contentId)}`
+              );
+
+              const article = await apiRequest(articleUrl, token, {
+                method: "GET"
+              });
+
+              return {
+                id: article.id,
+                title: article.title,
+                type: article.type,
+                language: article.language,
+                publishedAt: article.publishedAt,
+                occurredAt: article.occurredAt,
+                summary: article.summary || "",
+                bodyHtml: article.body || "",
+                bodyText: htmlToText(article.body || ""),
+                sources: article.sources || []
+              };
+            } catch (error) {
+              return {
+                id: contentId,
+                error: error.message
+              };
+            }
+          }
+        );
+
+        const successfulArticles = articles.filter(article => !article.error);
+        const failedArticles = articles.filter(article => article.error);
+
+        const combinedResult = {
+          folderId: VZLA_FOLDER_ID,
+          articleCount: articles.length,
+          successfulArticleCount: successfulArticles.length,
+          failedArticleCount: failedArticles.length,
+          articles
+        };
+
+        statusOutput.textContent =
+          `Completed. Loaded ${successfulArticles.length} of ` +
+          `${articles.length} VZLA article(s).`;
+
+        responseOutput.textContent = formatResponse(combinedResult);
+      } catch (error) {
+        statusOutput.textContent =
+          `VZLA folder request failed: ${error.message}`;
+      } finally {
+        loadVzlaButton.disabled = false;
       }
     });
   </script>
